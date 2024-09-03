@@ -1,8 +1,8 @@
-import Categoria from "./Categoria"
-import Cautela from "./Cautela"
-import Item from "./Item"
-import Livro from "./Livro"
-import Militar from "./Militar"
+import Categoria from "./model/Categoria"
+import Cautela from "./model/Cautela"
+import Item from "./model/Item"
+import Livro from "./model/Livro"
+import Militar from "./model/Militar"
 
 
 const cat1 = new Categoria({
@@ -33,7 +33,7 @@ livro = livro.novaCautela(militar, fz1, fz2)
 livro = livro.inserirItem(fz3)
 livro = livro.inserirItem(fz4)
 livro = livro.novaCautela(militar, fz3)
-let idCautela = livro.cautelas[1] as Cautela
+let idCautela = livro.cautelas.todas[0]?.id.valor as string 
 livro = livro.fecharCautela(idCautela)
-livro = livro.removerItem(fz4.id.valor)
-console.log(livro.cautelas.map(c => c.props))
+livro = livro.novaCautela(militar, fz1)
+console.log(livro.itensDisponiveis)

@@ -16,6 +16,10 @@ export default class Itens {
         return this.todos.map(i => i.props)
     }
 
+    get length(): number {
+        return this.todos.length
+    }
+
     incluir(item: ItemProps): Itens {
         const itens = [...this.props]
         itens.push(item)
@@ -30,6 +34,15 @@ export default class Itens {
     contem(item: Item | Id | string): boolean {
         const ItemId = Itens.IdItem(item)
         return this.todos.some(i => i.id.valor === ItemId)
+    }
+
+    intersecaoCom(itens: Item[]):Itens {
+        return new Itens(this.todos
+            .filter(i => itens
+                .map(Itens.IdItem)
+                .includes(i.id.valor))
+            .map(i => i.props)
+        )
     }
 
     porCategoria(categoria: Categoria | Id | string): Item[] {
