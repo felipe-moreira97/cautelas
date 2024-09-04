@@ -1,0 +1,10 @@
+{
+    "material-icon-theme.folders.associations": {
+        "adapters": "pipe",
+        "cautelas": "core",
+        "external": "tools",
+        "model": "json",
+        "provider": "config",
+        "usecases": "generator"
+    }
+}

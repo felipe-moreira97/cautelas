@@ -20,11 +20,11 @@ export default class Livro extends Entidade<Livro, LivroProps> {
         this.cautelas = new Cautelas(props.cautelas)
     }
 
-    get itensCautelados():Itens {
-        return this.cautelas.cautelados.todosItens
+    get itensCautelados(): Itens {
+        return this.cautelas.todosItens
     }
 
-    get itensDisponiveis():Itens {
+    get itensDisponiveis(): Itens {
         return new Itens(this.itens.todos
             .filter(i => !this.itensCautelados.todos
                 .map(Itens.IdItem)
@@ -36,8 +36,7 @@ export default class Livro extends Entidade<Livro, LivroProps> {
     novaCautela(militar: Militar, ...itens: Item[]): Livro {
         const contidos = this.itens.intersecaoCom(itens)
         if (contidos.length === itens.length) {
-            const TodosItensCautelados = this.cautelas.cautelados.todosItens
-            const itensCautelados = TodosItensCautelados.intersecaoCom(itens)
+            const itensCautelados = this.itensCautelados.intersecaoCom(itens)
             if (itensCautelados.length === 0) {
                 const novaCautela = new Cautela({
                     itens: itens.map(i => i.props),
@@ -62,7 +61,7 @@ export default class Livro extends Entidade<Livro, LivroProps> {
     fecharCautela(cautela: Cautela | Id | string): Livro {
         return new Livro({
             ...this.props,
-            cautelas:this.cautelas.descautelar(cautela).props
+            cautelas: this.cautelas.descautelar(cautela).props
         })
     }
 
@@ -78,8 +77,7 @@ export default class Livro extends Entidade<Livro, LivroProps> {
 
     removerItem(item: Item | Id | string): Livro {
         if (this.itens.contem(item)) {
-            const todosItensCautelados = this.cautelas.cautelados.todosItens
-            if (!todosItensCautelados.contem(item)) {
+            if (!this.itensCautelados.contem(item)) {
                 return this.clone({
                     ...this.props,
                     itens: this.itens.excluir(item).props

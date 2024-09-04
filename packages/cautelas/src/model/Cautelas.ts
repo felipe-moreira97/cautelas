@@ -6,7 +6,7 @@ export default class Cautelas {
     readonly todas: Cautela[]
 
     constructor(props: CautelaProps[]) {
-        this.todas= props.map(c => new Cautela(c))
+        this.todas = props.map(c => new Cautela(c))
     }
 
     get props(): CautelaProps[] {
@@ -17,15 +17,7 @@ export default class Cautelas {
         return this.todas.length
     }
 
-    get cautelados():Cautelas {
-        return new Cautelas(
-            this.todas
-                .filter(c => c.cautelado)
-                .map(c => c.props)
-        )
-    }
-
-    get todosItens():Itens {
+    get todosItens(): Itens {
         return new Itens(
             this.todas
                 .flatMap(c => c.itens.map(i => i.props))
@@ -49,14 +41,9 @@ export default class Cautelas {
     }
 
     descautelar(cautela: Cautela | Id | string): Cautelas {
-        const IdCautela = Cautelas.IdCautela(cautela)
-        const novaCautela = this.todas.find(c => Cautelas.IdCautela(c) === IdCautela)
-        if (novaCautela) {
-            const novaCautelas = this.todas
-                .filter(c => Cautelas.IdCautela(c) !== IdCautela)
-                .map(c => c.props)
-            novaCautelas.push(novaCautela.descautelar().props)
-            return new Cautelas([...novaCautelas ])
+        if (this.contem(cautela)) {
+            const IdCautela = Cautelas.IdCautela(cautela)
+            return new Cautelas(this.props.filter(c => c.id !== IdCautela))
         }
         throw new ErroDeDominio("cautela inexistente")
     }
