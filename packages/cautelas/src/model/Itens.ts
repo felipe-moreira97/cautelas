@@ -1,9 +1,11 @@
 import { Id } from "common";
-import Categoria from "./Categoria";
+import Categoria, { CategoriaProps } from "./Categoria";
 import Item, { ItemProps } from "./Item";
 
-
-
+type ItensPorCategoria = {
+    categoria:CategoriaProps,
+    itens:ItemProps[]
+}
 
 export default class Itens {
     readonly todos: Item[]
@@ -20,9 +22,21 @@ export default class Itens {
         return this.todos.length
     }
 
-    incluir(item: ItemProps): Itens {
+    get categorias(): Categoria[] {
+        return this.todos.reduce((listaCategoria,itemAtual) => {
+            if (listaCategoria.map(this.IdCategoria).includes(itemAtual.categoria.id.valor)) {
+                return listaCategoria
+            } else {
+                listaCategoria.push(itemAtual.categoria)
+                return listaCategoria
+
+            }
+        },[] as Categoria[])
+    }
+
+    incluir(item: Item): Itens {
         const itens = [...this.props]
-        itens.push(item)
+        itens.push(item.props)
         return new Itens(itens)
     }
 
@@ -48,6 +62,17 @@ export default class Itens {
     porCategoria(categoria: Categoria | Id | string): Item[] {
         const categoriaId = this.IdCategoria(categoria)
         return this.todos.filter(i => i.categoria.id.valor === categoriaId)
+    }
+
+    get porCategorias():ItensPorCategoria[] {
+        const categorias = this.categorias
+        return categorias.map(c => {
+            const itens = this.porCategoria(c).map(i => i.props)
+            return {
+                categoria:c.props,
+                itens
+            }
+        })
     }
 
     private IdCategoria(categoria: Categoria | Id | string): string {

@@ -3,11 +3,14 @@ import { LivroProps } from "./model/Livro";
 import RepositorioLivro from "./provider/RepositorioLivro";
 
 export default class RepoLivroMemoria implements RepositorioLivro {
-    async salvar(livro: Livro): Promise<Livro> {
-        RepoLivroMemoria.livro = livro.props
-        return new Livro(RepoLivroMemoria.livro)
+    async salvar(livro: LivroProps): Promise<LivroProps> {
+        const livroExistente = RepoLivroMemoria.livros.findIndex(l => l.id === livro.id)
+        livroExistente >= 0 ? 
+            RepoLivroMemoria.livros[livroExistente] = livro :
+            RepoLivroMemoria.livros.push(livro)
+        return livro
     }
-    static livro: LivroProps = {
+    static livros: LivroProps[] = [{
         id: '0847b41c-18e3-45c6-90ef-39ff6cdfb1c2',
         itens: [
             {
@@ -20,5 +23,5 @@ export default class RepoLivroMemoria implements RepositorioLivro {
             }
         ],
         cautelas: []
-    }
+    }]
 }

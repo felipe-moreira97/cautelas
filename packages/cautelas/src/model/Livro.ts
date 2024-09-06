@@ -50,11 +50,11 @@ export default class Livro extends Entidade<Livro, LivroProps> {
                     ]
                 })
             }
-            const msg = itensCautelados.todos.map(i => i.categoria.nome.completo).join(", ")
+            const msg = itensCautelados.todos.map(i => i.nome).join(", ")
             throw new ErroDeDominio(`Item já cautelado ${msg}`)
         }
         const naoContidos = itens.filter(i => !contidos.todos.map(Itens.IdItem).includes(i.id.valor))
-        const msg = naoContidos.map(i => i.categoria.nome.completo).join(", ")
+        const msg = naoContidos.map(i => i.nome).join(", ")
         throw new ErroDeDominio(`Item não existente ${msg}`)
     }
 
@@ -65,8 +65,8 @@ export default class Livro extends Entidade<Livro, LivroProps> {
         })
     }
 
-    inserirItem(item: ItemProps): Livro {
-        if (!this.itens.contem(new Item(item))) {
+    inserirItem(item: Item): Livro {
+        if (!this.itens.contem(item)) {
             return this.clone({
                 ...this.props,
                 itens: this.itens.incluir(item).props

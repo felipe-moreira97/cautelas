@@ -1,5 +1,5 @@
-import { Livro } from "../model";
+import { LivroProps } from "../model";
 
 export default interface RepositorioLivro {
-    salvar(livro: Livro): Promise<Livro>
+    salvar(livro: LivroProps): Promise<LivroProps>
 }

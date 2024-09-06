@@ -1,18 +1,14 @@
 import { CasoDeUso } from "common";
-import { ItemProps, Livro } from "../model";
-import RepositorioLivro from "../provider/RepositorioLivro";
+import { Item, Livro } from "../model";
 
 
 type Entrada = {
-    item: ItemProps,
+    item: Item,
     livro: Livro
 }
 
 export default class IncluirItem implements CasoDeUso<Entrada, Livro> {
-    constructor(private repo: RepositorioLivro) { }
-    executar(entrada: Entrada): Promise<Livro> {
-        const livro = entrada.livro.inserirItem(entrada.item)
-        return this.repo.salvar(livro)
-    }
-
+    async executar(entrada: Entrada): Promise<Livro> {
+        return entrada.livro.inserirItem(entrada.item)
+}
 }

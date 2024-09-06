@@ -1,6 +1,7 @@
+import Cautela, { CautelaProps } from "./Cautela";
 import Item, { ItemProps } from "./Item";
-import Livro from "./Livro";
-import Militar from "./Militar";
+import Livro, { LivroProps } from "./Livro";
+import Militar, { MilitarProps } from "./Militar";
 
-export { Livro, Item, Militar };
-export type { ItemProps };
+export { Livro, Item, Militar, Cautela };
+export type { ItemProps,LivroProps, MilitarProps, CautelaProps };
