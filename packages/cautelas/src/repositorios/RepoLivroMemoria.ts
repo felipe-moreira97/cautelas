@@ -1,11 +1,14 @@
-import { Livro } from "./model";
-import { LivroProps } from "./model/Livro";
-import RepositorioLivro from "./provider/RepositorioLivro";
+import { Livro } from "../model";
+import { LivroProps } from "../model/Livro";
+import RepositorioLivro from "../provider/RepositorioLivro";
 
 export default class RepoLivroMemoria implements RepositorioLivro {
+    obter(): Promise<LivroProps> {
+        throw new Error("Method not implemented.");
+    }
     async salvar(livro: LivroProps): Promise<LivroProps> {
         const livroExistente = RepoLivroMemoria.livros.findIndex(l => l.id === livro.id)
-        livroExistente >= 0 ? 
+        livroExistente >= 0 ?
             RepoLivroMemoria.livros[livroExistente] = livro :
             RepoLivroMemoria.livros.push(livro)
         return livro
