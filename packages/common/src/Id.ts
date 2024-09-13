@@ -7,7 +7,11 @@ export default class Id {
   constructor(valor?: string, atributo?: string, objeto?: string) {
     this.valor = valor ?? uuid();
     if (!Id.isValido(this.valor)) {
-      const msg = ErroUtil.msgPadrao("não é um id (uuid) válido", atributo, objeto);
+      const msg = ErroUtil.msgPadrao(
+        "não é um id (uuid) válido",
+        atributo,
+        objeto,
+      );
       throw new ErroDeDominio(msg);
     }
   }

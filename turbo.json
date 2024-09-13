@@ -21,9 +21,18 @@
         "^lint"
       ]
     },
-    "dev": {
+    "backend#dev": {
+      "dependsOn": ["^build","build","compile"],
       "cache": true,
-      "persistent": true
+      "persistent": true,
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": ["dist/**"] 
+    },
+    "backend#compile":{
+      "dependsOn": ["build"]
     }
   }
 }
