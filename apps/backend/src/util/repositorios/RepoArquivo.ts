@@ -1,16 +1,26 @@
 import { RepositorioMilitar } from "auth";
 import { RepositorioLivro, LivroProps } from "cautelas";
-import { Militar } from "common";
+import { MilitarProps } from "common";
 import * as fs from "fs/promises";
+import { existsSync } from "original-fs";
 
 export default class RepoArquivo implements RepositorioLivro, RepositorioMilitar {
-  constructor(private caminhoArquivo: string) {}
-  obterMilitarPorCpf(cpf: string): Promise<Militar> {
-    throw new Error("Method not implemented.");
+  constructor(private caminhoArquivo: string) { }
+  async obterMilitarPorCpf(cpf: string): Promise<MilitarProps> {
+    const militares = await this.obterMilitares()
+    const militar = militares.find(m => m.cpf === cpf)
+    if (!militar) throw new Error("Militar não encontrado")
+    return militar
   }
-  cadastrarMilitar(militar: Militar): Promise<Militar> {
-    throw new Error("Method not implemented.");
+  async cadastrarMilitar(militar: MilitarProps): Promise<MilitarProps> {
+    const livro = await this.obter()
+    const militares = await this.obterMilitares()
+    militares.push(militar)
+    return fs
+      .writeFile(this.caminhoArquivo, JSON.stringify({ livro, militares }))
+      .then(() => militar)
   }
+
   async obter(): Promise<LivroProps> {
     return fs
       .readFile(this.caminhoArquivo, { encoding: "utf8" })
@@ -19,12 +29,13 @@ export default class RepoArquivo implements RepositorioLivro, RepositorioMilitar
   async salvar(livro: LivroProps): Promise<LivroProps> {
     const militares = await this.obterMilitares()
     return fs
-      .writeFile(this.caminhoArquivo, JSON.stringify({ livro, militares}))
+      .writeFile(this.caminhoArquivo, JSON.stringify({ livro, militares }))
       .then(() => livro);
   }
-  private async obterMilitares():Promise<Militar[]> {
+  async obterMilitares(): Promise<MilitarProps[]> {
+    if (!existsSync(this.caminhoArquivo)) return []
     return fs
-    .readFile(this.caminhoArquivo, { encoding: "utf8" })
-    .then((string) => JSON.parse(string).militares);
+      .readFile(this.caminhoArquivo, { encoding: "utf8" })
+      .then((string: string) => JSON.parse(string).militares)
   }
 }

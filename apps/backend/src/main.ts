@@ -2,8 +2,6 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 import HandlerLivroArquivo from "./HandlerLivroArquivo";
 
-const handler = new HandlerLivroArquivo();
-
 function createWindow() {
   const win = new BrowserWindow({
     width: 800,
@@ -15,13 +13,15 @@ function createWindow() {
   const indexHTML = path.join(__dirname, "index.html");
   win.loadFile(indexHTML);
 }
+const handler = new HandlerLivroArquivo();
 
 app.whenReady().then(() => {
+  createWindow();
+
   ipcMain.handle("abrirLivro", handler.abrirLivro);
   ipcMain.handle("novoLivro", handler.novoLivro);
   ipcMain.handle("salvarLivro", handler.salvarLivro);
 
-  createWindow();
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();

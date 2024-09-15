@@ -11,7 +11,7 @@ export default class AutenticarMilitar implements CasoDeUso<Entrada, Militar> {
   constructor(
     private repo: RepositorioMilitar,
     private criptoRepo: ProvedorCripto,
-  ) {}
+  ) { }
   async executar(entrada: Entrada): Promise<Militar> {
     const cpf = new Cpf(entrada.cpf);
     const militar = await this.repo.obterMilitarPorCpf(cpf.valor);
@@ -19,10 +19,10 @@ export default class AutenticarMilitar implements CasoDeUso<Entrada, Militar> {
 
     const validar = await this.criptoRepo.comparar(
       entrada.senha,
-      militar.senha?.valor!,
+      militar.senha!,
     );
     if (!validar) throw new ErroDeDominio("a senha não confere");
 
-    return militar.semSenha();
+    return new Militar(militar).semSenha();
   }
 }

@@ -5,7 +5,6 @@
   "main": "dist/main.ts",
   "scripts": {
     "dev": "electron ./dist/main.js",
-    "compile": "cp src/index.html dist/",
     "build": "tsc"
   },
   "keywords": [],
@@ -19,7 +18,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "auth":"*",
+    "auth": "*",
     "cautelas": "*"
   }
 }

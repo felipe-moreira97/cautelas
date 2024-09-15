@@ -1,5 +1,5 @@
 import AutenticarMilitar from "./AutenticarMilitar";
 import CadastrarMilitar from "./CasdastrarMilitar";
-import ObterMilitarPorCpf from "./ObterMilitarPorCpf";
+import ObterMilitares from "./ObterMilitares";
 
-export { AutenticarMilitar, CadastrarMilitar, ObterMilitarPorCpf };
+export { AutenticarMilitar, CadastrarMilitar, ObterMilitares };

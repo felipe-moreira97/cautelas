@@ -1,20 +1,26 @@
-import { Livro, NovoLivro, ObterLivro, SalvarLivro } from "cautelas";
+import { LivroProps, NovoLivro } from "cautelas";
 import { app, dialog, Event } from "electron";
-import RepoLivroArquivo from "./util/repositorios/RepoArquivo";
 import path from "path";
-import fs from "fs";
+import fs from "fs/promises";
+import { MilitarProps } from "common";
+import { existsSync, mkdirSync } from "original-fs";
 
 export interface HandlerLivro {
-  abrirLivro(): Promise<Livro | undefined>;
-  novoLivro(): Promise<Livro | undefined>;
-  salvarLivro(event: Event, livro: Livro): Promise<Livro>;
+  abrirLivro(): Promise<Data | undefined>;
+  novoLivro(): Promise<Data | undefined>;
+  salvarLivro(event: Event, livro: Data): Promise<Data>;
+}
+
+export type Data = {
+  livro: LivroProps,
+  militares: MilitarProps[]
 }
 
 export default class HandlerLivroArquivo implements HandlerLivro {
   static caminhoArquivo: string = "";
   static dataPath: string = path.join(app.getPath("userData"), "data");
-  constructor() {}
-  async abrirLivro() {
+  constructor() { }
+  async abrirLivro(): Promise<Data | undefined> {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       filters: [
         {
@@ -27,15 +33,15 @@ export default class HandlerLivroArquivo implements HandlerLivro {
     });
     if (!canceled) {
       HandlerLivroArquivo.caminhoArquivo = filePaths[0]!;
-      return new ObterLivro(
-        new RepoLivroArquivo(HandlerLivroArquivo.caminhoArquivo),
-      ).executar();
+      return fs
+        .readFile(HandlerLivroArquivo.caminhoArquivo, { encoding: "utf8" })
+        .then((string) => JSON.parse(string));
     }
   }
 
-  async novoLivro() {
-    if (!fs.existsSync(HandlerLivroArquivo.dataPath))
-      fs.mkdirSync(HandlerLivroArquivo.dataPath);
+  async novoLivro(): Promise<Data | undefined> {
+    if (!existsSync(HandlerLivroArquivo.dataPath))
+      mkdirSync(HandlerLivroArquivo.dataPath);
     const { filePath, canceled } = await dialog.showSaveDialog({
       filters: [
         {
@@ -48,14 +54,17 @@ export default class HandlerLivroArquivo implements HandlerLivro {
     });
     if (canceled) return;
     HandlerLivroArquivo.setCaminhoArquivo(filePath);
-    const novoLivro = await new NovoLivro().executar();
-    const repo = new RepoLivroArquivo(HandlerLivroArquivo.caminhoArquivo);
-    return new SalvarLivro(repo).executar(novoLivro);
+    const livro = (await new NovoLivro().executar()).props;
+    const militares = [] as MilitarProps[]
+    return fs
+      .writeFile(HandlerLivroArquivo.caminhoArquivo, JSON.stringify({ livro, militares }))
+      .then(() => ({ livro, militares }));
   }
 
-  async salvarLivro(event: Event, livro: Livro): Promise<Livro> {
-    const repo = new RepoLivroArquivo(HandlerLivroArquivo.caminhoArquivo);
-    return new SalvarLivro(repo).executar(livro);
+  async salvarLivro(event: Event, data: Data): Promise<Data> {
+    return fs
+      .writeFile(HandlerLivroArquivo.caminhoArquivo, JSON.stringify(data))
+      .then(() => data);
   }
 
   static setCaminhoArquivo(valor: string) {
