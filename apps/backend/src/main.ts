@@ -11,7 +11,9 @@ function createWindow() {
     },
   });
   const indexHTML = path.join(__dirname, "index.html");
-  win.loadFile(indexHTML);
+  // win.loadFile(indexHTML);
+  win.loadURL('http://localhost:3000')
+  win.webContents.openDevTools()
 }
 const handler = new HandlerLivroArquivo();
 

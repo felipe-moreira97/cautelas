@@ -21,18 +21,40 @@
         "^lint"
       ]
     },
+    "dev": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**"
+      ]
+    },
+    "frontend#start": {},
     "backend#dev": {
-      "dependsOn": ["^build","build","compile"],
+      "dependsOn": [
+        "^build",
+        "build"
+      ],
       "cache": true,
       "persistent": true,
       "inputs": [
         "$TURBO_DEFAULT$",
         ".env*"
       ],
-      "outputs": ["dist/**"] 
+      "outputs": [
+        "dist/**"
+      ]
     },
-    "backend#compile":{
-      "dependsOn": ["build"]
+    "backend#compile": {
+      "dependsOn": [
+        "build"
+      ]
     }
   }
 }
