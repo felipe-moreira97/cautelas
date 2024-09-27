@@ -1,12 +1,19 @@
-import { useContext } from "react";
-import { LivroContext } from "../src/contexts/LivroContext";
-import { useReactTable } from "@tanstack/react-table";
+"use client"
+import { useState } from "react";
+import { Button } from "../src/components/Button";
+import NovoItem from "../src/components/NovoItem";
+import Tabela from "../src/components/Tabela";
+
 
 export default function Livro() {
-    const { state, dispatch } = useContext(LivroContext)
+    const [visivel,setVisivel] = useState(false)
 
-    const table = useReactTable({ columns, data, getCoreRowModel: getCoreRowModel() })
     return (
-        <p>{JSON.stringify(state.livro.itensDisponiveis.porCategorias)}</p>
+            <header>
+                <Button funcao={()=> setVisivel(true)}>Incluir Item</Button>
+                <Button funcao={()=> {throw new Error('click')}}>Fechar Livro</Button>
+                <NovoItem visivel={visivel} setVisivel={setVisivel}/>
+                <Tabela />
+            </header>
     )
 }

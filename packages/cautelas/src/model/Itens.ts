@@ -2,7 +2,7 @@ import { Id } from "common";
 import Categoria, { CategoriaProps } from "./Categoria";
 import Item, { ItemProps } from "./Item";
 
-type ItensPorCategoria = {
+export type ItensPorCategoria = {
   categoria: Categoria;
   itens: Itens;
 };
