@@ -41,7 +41,7 @@
         "^build",
         "build"
       ],
-      "cache": true,
+      "cache": false,
       "persistent": true,
       "inputs": [
         "$TURBO_DEFAULT$",

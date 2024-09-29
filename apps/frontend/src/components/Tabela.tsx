@@ -1,13 +1,13 @@
 import { useContext } from "react";
 import { LivroContext } from "../contexts/LivroContext";
-import { useReactTable, getCoreRowModel,flexRender } from "@tanstack/react-table";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
 
 type TableData = {
     categoria:string,
     todos:number,
     disponiveis:number,
     cautelados:number
-}
+}    
 
 export default function Tabela() {
     const { state } = useContext(LivroContext)
@@ -16,63 +16,42 @@ export default function Tabela() {
     const disponiveis = livro.itensDisponiveis.porCategorias
     const todos = livro.itens.porCategorias
 
-    const data:TableData[] = todos.map((i,j) => ({
+    const data:TableData[] = todos.map((i) => ({
             categoria: i.categoria.nome.completo,
             todos:i.itens.length,
-            cautelados:cautelados[j].itens.length,
-            disponiveis:disponiveis[j].itens.length
+            cautelados:cautelados.find(j => j.categoria.igual(i.categoria))?.itens.length || 0,
+            disponiveis:disponiveis.find(j => j.categoria.igual(i.categoria))?.itens.length || 0
         }))
 
     const columns = [
-        {
-            header:'Cateogria',
-            accessorKey:'categoria'
-        },
-        {
-        header: 'Todos',
-        accessorKey: 'todos'
-        },
-        {
-        header: 'Cautelados',
-        accessorKey: 'cautelados'
-        },
-        {
-        header: 'Disponíveis',
-        accessorKey: 'disponiveis'
-        },
+      {
+        key:"categoria",
+        label:"Categoria"
+      },
+      {
+        key:"todos",
+        label:"Existentes"
+      },{
+        key:"cautelados",
+        label:"Cautelados"
+      },{
+        key:"disponiveis",
+        label:"Disponiveis"
+      },
     ]
-    
-    const table = useReactTable({ columns, data, getCoreRowModel: getCoreRowModel() })
 
-    return (
-            <table>
-            <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-                <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                    <th key={header.id}>
-                    {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                        )}
-                    </th>
-                ))}
-                </tr>
-            ))}
-            </thead>
-            <tbody>
-            {table.getRowModel().rows.map(row => (
-                <tr key={row.id}>
-                {row.getVisibleCells().map(cell => (
-                    <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                ))}
-                </tr>
-            ))}
-            </tbody>
-            </table>
-    )
+  return (
+    <Table className="grow" isStriped>
+      <TableHeader columns={columns}>
+        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+      </TableHeader>
+      <TableBody items={data}>
+        {(item) => (
+          <TableRow key={item.categoria}>
+            {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  );
 }
