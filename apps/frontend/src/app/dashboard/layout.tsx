@@ -1,5 +1,7 @@
+import ListaDeErros from "../../components/ListaDeErros"
 import NavBar from "../../components/NavBar"
 import SideBar from "../../components/SideBar"
+
 
 export default function layout({children}:{
     children:React.ReactNode
@@ -13,6 +15,7 @@ export default function layout({children}:{
                     {children}
                 </div>
             </div>
+            <ListaDeErros />
         </div>
     )
 }

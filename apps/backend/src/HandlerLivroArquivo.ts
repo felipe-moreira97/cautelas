@@ -1,26 +1,21 @@
-import { LivroProps, NovoLivro } from "cautelas";
+import { LivroProps } from "cautelas";
 import { app, dialog, Event } from "electron";
 import path from "path";
 import fs from "fs/promises";
-import { MilitarProps } from "common";
 import { existsSync, mkdirSync } from "original-fs";
 
 export interface HandlerLivro {
-  abrirLivro(): Promise<Data | undefined>;
-  novoLivro(): Promise<Data | undefined>;
-  salvarLivro(event: Event, livro: Data): Promise<Data>;
+  abrirLivro(): Promise<LivroProps | undefined>;
+  novoLivro(event: Event, livro:LivroProps): Promise<LivroProps | undefined>;
+  salvarLivro(event: Event, livro: LivroProps): Promise<LivroProps>;
 }
 
-export type Data = {
-  livro: LivroProps,
-  militares: MilitarProps[]
-}
 
 export default class HandlerLivroArquivo implements HandlerLivro {
   static caminhoArquivo: string = "";
   static dataPath: string = path.join(app.getPath("userData"), "data");
   constructor() { }
-  async abrirLivro(): Promise<Data | undefined> {
+  async abrirLivro(): Promise<LivroProps | undefined> {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       filters: [
         {
@@ -39,7 +34,7 @@ export default class HandlerLivroArquivo implements HandlerLivro {
     }
   }
 
-  async novoLivro(): Promise<Data | undefined> {
+  async novoLivro(event: Event,livro:LivroProps): Promise<LivroProps | undefined> {
     if (!existsSync(HandlerLivroArquivo.dataPath))
       mkdirSync(HandlerLivroArquivo.dataPath);
     const { filePath, canceled } = await dialog.showSaveDialog({
@@ -54,17 +49,15 @@ export default class HandlerLivroArquivo implements HandlerLivro {
     });
     if (canceled) return;
     HandlerLivroArquivo.setCaminhoArquivo(filePath);
-    const livro = (await new NovoLivro().executar()).props;
-    const militares = [] as MilitarProps[]
     return fs
-      .writeFile(HandlerLivroArquivo.caminhoArquivo, JSON.stringify({ livro, militares }))
-      .then(() => ({ livro, militares }));
+      .writeFile(HandlerLivroArquivo.caminhoArquivo, JSON.stringify(livro))
+      .then(() =>  livro);
   }
 
-  async salvarLivro(event: Event, data: Data): Promise<Data> {
+  async salvarLivro(event: Event, livro: LivroProps): Promise<LivroProps> {
     return fs
-      .writeFile(HandlerLivroArquivo.caminhoArquivo, JSON.stringify(data))
-      .then(() => data);
+      .writeFile(HandlerLivroArquivo.caminhoArquivo, JSON.stringify(livro))
+      .then(() => livro);
   }
 
   static setCaminhoArquivo(valor: string) {

@@ -1,13 +1,17 @@
 import { CasoDeUso, Militar } from "common";
 import { Livro } from "../model";
+import { RepositorioLivro } from "../provider";
 
-type Entrada = {};
-
-export default class NovoLivro implements CasoDeUso<Entrada, Livro, Militar> {
-  async executar(): Promise<Livro> {
-    return new Livro({
+export default class NovoLivro implements CasoDeUso<any, Livro | undefined, Militar> {
+  constructor(private repo: RepositorioLivro) {}
+  async executar(): Promise<Livro | undefined> {
+    return this.repo
+    .novo(new Livro({
       cautelas: [],
       itens: [],
-    });
+      militares:[]
+    }).props)
+    .then((l) => l && new Livro(l));
+    ;
   }
 }

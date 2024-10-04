@@ -1,6 +1,7 @@
 import { ErroDeDominio, Id } from "common";
 import Cautela, { CautelaProps } from "./Cautela";
 import Itens from "./Itens";
+import { Militares } from "./Militares";
 
 export default class Cautelas {
   readonly todas: Cautela[];
@@ -18,7 +19,11 @@ export default class Cautelas {
   }
 
   get todosItens(): Itens {
-    return new Itens(this.todas.flatMap((c) => c.itens.map((i) => i.props)));
+    return new Itens(this.todas.flatMap((c) => c.itens.props));
+  }
+
+  get todosMilitares():Militares {
+    return new Militares(this.todas.map(c => c.militar.props))
   }
 
   incluir(cautela: CautelaProps): Cautelas {

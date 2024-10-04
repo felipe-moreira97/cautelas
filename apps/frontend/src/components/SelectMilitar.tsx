@@ -1,4 +1,4 @@
-import { Select, SelectItem, SharedSelection} from "@nextui-org/react";
+import { Select, SelectItem} from "@nextui-org/react";
 import { Militar } from "common";
 
 

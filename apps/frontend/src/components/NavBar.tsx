@@ -8,6 +8,8 @@ export default function NavBar() {
   return (
     <Navbar isBordered>
       <NavbarContent>
+        <div className="flex flex-row justify-between w-full">
+          <div className="flex flex-row">
       <NavbarItem>
           <Button as={Link} href="/dashboard/livro" variant="light" color={path === "/dashboard/livro" ? "primary" : "default"}>
             Livro
@@ -19,8 +21,8 @@ export default function NavBar() {
           </Button>
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} href="/dashboard/categorias" variant="light" color={path === "/dashboard/categorias" ? "primary" : "default"}>
-            Categorias
+          <Button as={Link} href="/dashboard/materiais" variant="light" color={path === "/dashboard/materiais" ? "primary" : "default"}>
+            Materiais
           </Button>
         </NavbarItem>
         <NavbarItem>
@@ -28,11 +30,13 @@ export default function NavBar() {
             Militares
           </Button>
         </NavbarItem>
+        </div>
         <NavbarItem>
           <Button as={Link} color="danger" variant="light" href="/" >
           Fechar Livro
           </Button>
         </NavbarItem>
+        </div>
       </NavbarContent>
     </Navbar>
   );

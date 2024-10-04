@@ -1,36 +1,47 @@
 "use client"
 
 import { Button } from "@nextui-org/react";
-import { Livro } from "cautelas";
-import { Militar } from "common";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { LivroContext } from "../contexts/LivroContext";
-import { setLivroMilitares } from "../contexts/LivroProvider";
 import { useElectron } from "../hooks/useElectron";
 import { useRouter } from "next/navigation";
-
+import { ErrosContext } from "../contexts/ErrosContext";
 
 export default function page() {
     const { abrirLivro, novoLivro } = useElectron()
+    
     const router = useRouter()
+    const [isDisabled,setIsDisabled] = useState<boolean>(false)
 
-    const { dispatch } = useContext(LivroContext)
+    const { setLivro } = useContext(LivroContext)
+    const { setErros } = useContext(ErrosContext)
+
     const handleLivro = async (isNew: boolean) => {
-        const resp = isNew ? await novoLivro() : await abrirLivro()
-        if (resp) {
-            const data = {
-                livro: new Livro(resp.livro),
-                militares: resp.militares.map(m => new Militar(m))
-            }
-            setLivroMilitares({ dispatch, data })
+        setIsDisabled(true)
+        const resp = isNew ? await novoLivro.executar().catch(setErros) : await abrirLivro.executar().catch(setErros)
+        if(resp) {
+            setLivro(resp)
             router.push("/dashboard/livro")
+            setIsDisabled(false)
+        } else setIsDisabled(false)
         }
-    }
 
     return (
-        <div className="flex gap-4 justify-center">
-            <Button color="primary" onPress={() => handleLivro(false)}>Abrir Livro</Button>
-            <Button color="secondary" onPress={() => handleLivro(true)}>Novo Livro</Button>
+        <div className="flex gap-4 justify-center h-screen items-center">
+            <Button 
+                color="primary" 
+                size="lg" 
+                isDisabled={isDisabled} 
+                onPress={() => handleLivro(false)}>
+                    Abrir Livro
+            </Button>
+            <Button 
+                color="secondary" 
+                size="lg" 
+                isDisabled={isDisabled} 
+                onPress={() => handleLivro(true)}>
+                    Novo Livro
+            </Button>
         </div>
     )
 }

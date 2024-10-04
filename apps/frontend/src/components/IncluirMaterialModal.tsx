@@ -4,28 +4,32 @@ import { useContext, useState } from "react";
 import { LivroContext } from "../contexts/LivroContext";
 import SelectCategoria from "./SelectCategoria";
 import { Categoria, Item } from "cautelas";
-import { setLivro } from "../contexts/LivroProvider";
+import NovaCategoriaPopover from "./NovaCategoriaPopover";
+import { useElectron } from "../hooks/useElectron";
+import { ErrosContext } from "../contexts/ErrosContext";
 
 
 export default function IncluirMaterialModal() {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
-  const { state:{livro},dispatch } = useContext(LivroContext)
-  const[categoriaId,setCategoriaId] = useState<string>("");
-  const[numSerie,setNumSerie] = useState<string>("");
-  const[categoriaNome,setCategoriaNome] = useState<string>("");
+  const { livro, setLivro } = useContext(LivroContext)
+  const { setErros } = useContext(ErrosContext)
+  const {novoItem} = useElectron()
 
-
+  const[categoria,setCategoria] = useState<Categoria | undefined>();
+  const[categorias,setCategorias] = useState<Categoria[]>(livro.itens.categorias);
+  const[numeroDeSerie,setNumeroDeSerie] = useState<string>("");
 
     function handleIncluir() {
-    const categoria = livro.itens.categorias.find(c => c.id.valor === categoriaId) || new Categoria({nome:categoriaNome})
-    const novoLivro = livro.inserirItem(new Item({
-        categoria:categoria.props,
-        numeroDeSerie: numSerie
-    }))
-    setLivro({dispatch,livro:novoLivro})
-    setCategoriaId("")
-    setNumSerie("")
-    setCategoriaNome("")
+    novoItem.executar({item:new Item({
+        categoria:categoria!.props,
+        numeroDeSerie
+      }),
+      livro
+    }).then(novoLivro => {
+      setLivro(novoLivro)
+      setCategoria(undefined)
+      setNumeroDeSerie("")
+    }).catch(setErros)
   }
 
   return (
@@ -37,12 +41,18 @@ export default function IncluirMaterialModal() {
             <>
               <ModalHeader className="flex flex-col gap-1">Incluir Material</ModalHeader>
               <ModalBody>
-                    <SelectCategoria categorias={livro.itens.categorias} value={categoriaId} setValue={setCategoriaId} />
-                    <Input type="text" variant="underlined" label="nova categoria" value={categoriaNome} onValueChange={setCategoriaNome} />
-                    <Input type="text" variant="underlined" label="número de série" value={numSerie} onValueChange={setNumSerie} />
+                <div className="flex items-end gap-2 flex-row">
+                    <SelectCategoria categorias={categorias} value={categoria} setValue={setCategoria} />
+                    <NovaCategoriaPopover setCategorias={setCategorias}/>
+                </div>
+                    {categoria?.temNumeroDeSerie && <Input type="text" variant="underlined" label="número de série" value={numeroDeSerie} onValueChange={setNumeroDeSerie} />}
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button color="danger" variant="light" onPress={() =>{
+                  onClose()
+                  setCategoria(undefined)
+                  setNumeroDeSerie("")
+                  }}>
                   Cancelar
                 </Button>
                 <Button color="primary" onPress={e => {

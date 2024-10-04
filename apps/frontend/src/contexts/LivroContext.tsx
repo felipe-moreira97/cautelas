@@ -1,23 +1,20 @@
 "use client"
 import { Livro } from "cautelas";
-import { Militar } from "common";
-import { createContext, Dispatch } from "react";
+import { createContext, Dispatch, SetStateAction } from "react";
 
 type TypeLivroContext = {
-    state: {
-        livro: Livro,
-        militares: Militar[]
-    },
-    dispatch: Dispatch<any>
+    livro: Livro,
+    setLivro: Dispatch<SetStateAction<Livro>>
 }
 
 
 export const LivroContext = createContext<TypeLivroContext>(
     {
-        state: {
-            livro: null,
-            militares: [],
-        },
-        dispatch: null
+        livro: new Livro({
+                cautelas:[],
+                itens:[],
+                militares:[]
+            }),
+        setLivro:() => null
     }
 );

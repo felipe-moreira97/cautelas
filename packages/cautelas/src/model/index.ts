@@ -3,6 +3,8 @@ import Item, { ItemProps } from "./Item";
 import Livro, { LivroProps } from "./Livro";
 import Categoria, {CategoriaProps} from "./Categoria";
 import Itens from "./Itens";
+import Cautelas from "./Cautelas";
+import { Militares } from "./Militares";
 
-export { Livro, Item, Cautela, Categoria, Itens };
-export type { ItemProps, LivroProps, CautelaProps,CategoriaProps };
+export { Livro, Item, Cautela, Cautelas, Militares, Categoria, Itens };
+export type { ItemProps, LivroProps, CautelaProps, CategoriaProps };

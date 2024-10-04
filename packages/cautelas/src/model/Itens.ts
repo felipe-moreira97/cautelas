@@ -1,5 +1,5 @@
 import { Id } from "common";
-import Categoria, { CategoriaProps } from "./Categoria";
+import Categoria from "./Categoria";
 import Item, { ItemProps } from "./Item";
 
 export type ItensPorCategoria = {

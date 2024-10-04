@@ -5,16 +5,19 @@ import { Categoria } from "cautelas";
 
 export default function SelectCategoria({categorias,value,setValue}:{
     categorias:Categoria[],
-    value:string,
-    setValue:(keys:string)=> void
+    value:Categoria | undefined,
+    setValue:(keys:Categoria)=> void
 }) {
   return (
       <Select 
         label="Selecione a categoria"
         isRequired
         variant="underlined"
-        selectedKeys={[value]}
-        onChange={e => setValue(e.target.value)}
+        selectedKeys={value && [value.id.valor]}
+        onChange={e => {
+          const selecionado = categorias.find(c => c.id.valor === e.target.value)
+          selecionado && setValue(selecionado)
+        }}
       >
         {categorias.map((categoria) => (
           <SelectItem key={categoria.id.valor}>

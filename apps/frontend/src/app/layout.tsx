@@ -3,6 +3,7 @@ import { ClientOnly } from "../components/ClientOnly"
 import {NextUIProvider} from "@nextui-org/react";
 import "./global.css"
 import { useRouter } from "next/navigation";
+import ErrosProvider from "../contexts/ErroProvider";
 export default function RootLayout({
     children,
 }: {
@@ -14,9 +15,11 @@ export default function RootLayout({
             <body className="bg-black">
                         <ClientOnly>
                             <NextUIProvider navigate={router.push}>
-                            <main className="dark text-foreground bg-background min-h-screen">
-                                {children}
-                                </main>
+                                <ErrosProvider>
+                                    <main className="dark text-foreground bg-background min-h-screen">
+                                        {children}
+                                    </main>
+                                </ErrosProvider>
                             </NextUIProvider>
                         </ClientOnly>
             </body>
