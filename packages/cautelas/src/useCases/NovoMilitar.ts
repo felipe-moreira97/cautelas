@@ -8,10 +8,8 @@ type Entrada = {
 };
 
 export default class NovoMilitar implements CasoDeUso<Entrada, Livro> {
-  constructor(private repo: RepositorioLivro) {}
+  constructor() { }
   async executar(entrada: Entrada): Promise<Livro> {
-    return this.repo
-      .salvar(entrada.livro.inserirMilitar(entrada.militar).props)
-      .then((l) => new Livro(l));
+    return entrada.livro.inserirMilitar(entrada.militar)
   }
 }

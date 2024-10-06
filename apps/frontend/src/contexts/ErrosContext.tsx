@@ -1,13 +1,15 @@
 "use client"
-import { createContext } from "react";
+import { createContext, Dispatch, SetStateAction } from "react";
 
 type TypeErroContext = {
     erros: Error[],
-    setErros: (erro:Error) => void
+    setErros: Dispatch<SetStateAction<Error[]>>,
+    addErro: (erro: Error) => void
 }
 export const ErrosContext = createContext<TypeErroContext>(
     {
         erros: [],
-        setErros:() => null
+        addErro: () => null,
+        setErros: e => null
     }
 );

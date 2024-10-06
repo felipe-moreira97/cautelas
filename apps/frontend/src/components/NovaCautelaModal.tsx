@@ -1,5 +1,5 @@
 "use client"
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import { useContext, useState } from "react";
 import { LivroContext } from "../contexts/LivroContext";
 import { Militar } from "common";
@@ -11,25 +11,25 @@ import { ErrosContext } from "../contexts/ErrosContext";
 
 
 export default function NovaCautelaModal() {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure()
-  const { livro,setLivro } = useContext(LivroContext)
-  const { setErros } = useContext(ErrosContext)
-  const {novaCautela} = useElectron()
-  const[itens,setItens] = useState<Item[]>([])
-  const[militar,setMilitar] = useState<Militar | undefined>()
-  
-    function handleIncluir(close:() => void) {
-        if(militar && (itens.length > 0)) {
-          novaCautela.executar({livro,itens}, militar)
-          .then(novoLivro => {
-            setLivro(novoLivro)
-            setItens([])
-            setMilitar(undefined)
-            close()
-          }).catch(setErros)
-        } else {
-            setErros(new Error("Sem Militar ou Material"))
-        }
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  const { livro, setLivro } = useContext(LivroContext)
+  const { addErro } = useContext(ErrosContext)
+  const { novaCautela } = useElectron()
+  const [itens, setItens] = useState<Item[]>([])
+  const [militar, setMilitar] = useState<Militar | undefined>()
+
+  function handleIncluir(close: () => void) {
+    if (militar && (itens.length > 0)) {
+      novaCautela({ livro, itens, militar })
+        .then(novoLivro => {
+          setLivro(novoLivro)
+          setItens([])
+          setMilitar(undefined)
+          close()
+        }).catch(addErro)
+    } else {
+      addErro(new Error("Sem Militar ou Material"))
+    }
 
   }
 
@@ -42,16 +42,16 @@ export default function NovaCautelaModal() {
             <>
               <ModalHeader className="flex flex-col gap-1">Nova Cautela</ModalHeader>
               <ModalBody>
-                    <SelectMaterial 
-                      materiais={livro.itensDisponiveis} 
-                      value={itens} 
-                      setValues={setItens}
-                    />
-                    <SelectMilitar 
-                      militares={livro.militares.todos} 
-                      value={militar} 
-                      setValue={setMilitar} 
-                    />
+                <SelectMaterial
+                  materiais={livro.itensDisponiveis}
+                  value={itens}
+                  setValues={setItens}
+                />
+                <SelectMilitar
+                  militares={livro.militares.todos}
+                  value={militar}
+                  setValue={setMilitar}
+                />
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={() => {

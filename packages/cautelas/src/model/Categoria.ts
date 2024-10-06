@@ -1,8 +1,8 @@
-import { Entidade, Id, EntidadeProps, TextoSimles } from "common";
+import { Entidade, EntidadeProps, TextoSimles } from "common";
 
 export interface CategoriaProps extends EntidadeProps {
   nome: string;
-  temNumeroDeSerie?:boolean;
+  temNumeroDeSerie?: boolean;
 }
 
 export default class Categoria extends Entidade<Categoria, CategoriaProps> {
@@ -11,7 +11,7 @@ export default class Categoria extends Entidade<Categoria, CategoriaProps> {
 
   constructor(props: CategoriaProps) {
     super(props);
-    this.nome = new TextoSimles(props.nome, 3, 120, "nome", "categoria");
+    this.nome = new TextoSimles(props.nome, 3, 120, "nome", "Categoria");
     this.temNumeroDeSerie = props.temNumeroDeSerie ? true : false
   }
 }

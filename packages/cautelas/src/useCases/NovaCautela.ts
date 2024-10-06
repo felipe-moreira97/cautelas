@@ -8,11 +8,9 @@ type Entrada = {
 };
 
 export default class NovaCautela implements CasoDeUso<Entrada, Livro, Militar> {
-  constructor(private repo: RepositorioLivro) {}
+  constructor() { }
   async executar(entrada: Entrada, usuario: Militar): Promise<Livro> {
-    return this.repo
-      .salvar(entrada.livro.novaCautela(usuario, ...entrada.itens).props)
-      .then((l) => new Livro(l));
+    return entrada.livro.novaCautela(usuario, ...entrada.itens)
   }
-  }
+}
 

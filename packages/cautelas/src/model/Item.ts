@@ -13,11 +13,11 @@ export default class Item extends Entidade<Item, ItemProps> {
   constructor(props: ItemProps) {
     super(props);
     this.categoria = new Categoria(props.categoria);
-    if (this.categoria.temNumeroDeSerie){
-      if(props.numeroDeSerie === undefined) {
+    if (this.categoria.temNumeroDeSerie) {
+      if (props.numeroDeSerie === undefined) {
         throw new ErroDeDominio(`${this.categoria.nome} deve possuir número de série`)
       } else {
-        this.numeroDeSerie = new TextoSimles(props.numeroDeSerie, 3, 120, "nome", "Item")
+        this.numeroDeSerie = new TextoSimles(props.numeroDeSerie, 3, 120, "número de série", "Material")
       }
     } else {
       this.numeroDeSerie = undefined

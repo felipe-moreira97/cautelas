@@ -1,6 +1,5 @@
 import { CasoDeUso } from "common";
 import { Livro, Cautela } from "../model";
-import { RepositorioLivro } from "../provider";
 
 type Entrada = {
   livro: Livro;
@@ -8,10 +7,8 @@ type Entrada = {
 };
 
 export default class NovaCautela implements CasoDeUso<Entrada, Livro> {
-  constructor(private repo: RepositorioLivro) {}
+  constructor() { }
   async executar(entrada: Entrada): Promise<Livro> {
-    return this.repo
-      .salvar(entrada.livro.fecharCautela(entrada.cautela).props)
-      .then((l) => new Livro(l));
+    return entrada.livro.fecharCautela(entrada.cautela)
   }
 }

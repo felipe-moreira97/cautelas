@@ -9,62 +9,62 @@ import { useElectron } from "../../../hooks/useElectron";
 import { ErrosContext } from "../../../contexts/ErrosContext";
 
 export default function page() {
-    const {livro,setLivro} = useContext(LivroContext)
-    const { setErros } = useContext(ErrosContext)
-    const {excluirItem} = useElectron()
-    const itens:Item[] = livro.itens.todos
-    const cautelados = livro.itensCautelados.todos.map(i => i.id.valor)
+  const { livro, setLivro } = useContext(LivroContext)
+  const { addErro } = useContext(ErrosContext)
+  const { excluirItem } = useElectron()
+  const itens: Item[] = livro.itens.todos
+  const cautelados = livro.itensCautelados.todos.map(i => i.id.valor)
 
-    const handleDelete = (item:Item) => {
-      excluirItem.executar({
-        item,
-        livro
-      }).then(setLivro)
-      .catch(setErros)
+  const handleDelete = (item: Item) => {
+    excluirItem({
+      item,
+      livro
+    }).then(setLivro)
+      .catch(addErro)
+  }
+
+  const columns = [
+    {
+      key: "nome",
+      label: "MATERIAL"
+    },
+    {
+      key: "acao",
+      label: "AÇÃO"
     }
-
-    const columns = [
-        {
-            key:"nome",
-            label:"MATERIAL"
-        },
-        {
-            key:"acao",
-            label:"AÇÃO"
-        }
-    ]
-    return (
-        <Table className="grow"classNames={{th:"text-center",td:"text-center"}}>
-        <TableHeader columns={columns}>
-          {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-        </TableHeader>
-        <TableBody items={itens}>
-          {(item) => (
-            <TableRow key={item.id.valor}>
-              {(columnKey) => ( columnKey === "acao" ?
+  ]
+  return (
+    <Table className="grow" classNames={{ th: "text-center", td: "text-center" }}>
+      <TableHeader columns={columns}>
+        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+      </TableHeader>
+      <TableBody items={itens}>
+        {(item) => (
+          <TableRow key={item.id.valor}>
+            {(columnKey) => (columnKey === "acao" ?
               <TableCell>
-              <div className="flex justify-center gap-2">
-                {item.categoria.temNumeroDeSerie && <EditarMaterialModal material={item}  />}
+                <div className="flex justify-center gap-2">
+                  {item.categoria.temNumeroDeSerie && <EditarMaterialModal material={item} />}
                   <Button isIconOnly onPress={() => handleDelete(item)} color="danger" size="sm">
                     <DeleteIcon />
-                    </Button>
-              </div>
-            </TableCell>
+                  </Button>
+                </div>
+              </TableCell>
               :
               <TableCell>
                 <div className={"flex justify-center gap-1"}>
-                <Chip 
-                color={cautelados.includes(item.id.valor) ? "danger" : "success"}
-                size="sm"
-                variant="flat"
-                >
-                {getKeyValue(item, columnKey)}
-                </Chip>
+                  <Chip
+                    color={cautelados.includes(item.id.valor) ? "danger" : "success"}
+                    size="sm"
+                    variant="flat"
+                  >
+                    {getKeyValue(item, columnKey)}
+                  </Chip>
                 </div>
-                </TableCell>)}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    )
+              </TableCell>)}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  )
 }

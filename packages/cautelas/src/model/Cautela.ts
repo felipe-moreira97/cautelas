@@ -21,7 +21,7 @@ export default class Cautela extends Entidade<Cautela, CautelaProps> {
 
   constructor(props: CautelaProps) {
     super(props);
-    if (props.itens.length <= 0) throw new ErroDeDominio("Cautela sem Itens");
+    if (props.itens.length <= 0) throw new ErroDeDominio("Cautela sem Materiais");
     this.itens = new Itens(props.itens)
     this.timestamp = props.timestamp ?? Date.now().toString();
     this.militar = new Militar(props.militar);

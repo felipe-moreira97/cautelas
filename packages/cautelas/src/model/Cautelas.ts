@@ -22,7 +22,7 @@ export default class Cautelas {
     return new Itens(this.todas.flatMap((c) => c.itens.props));
   }
 
-  get todosMilitares():Militares {
+  get todosMilitares(): Militares {
     return new Militares(this.todas.map(c => c.militar.props))
   }
 
@@ -47,7 +47,7 @@ export default class Cautelas {
       const IdCautela = Cautelas.IdCautela(cautela);
       return new Cautelas(this.props.filter((c) => c.id !== IdCautela));
     }
-    throw new ErroDeDominio("cautela inexistente");
+    throw new ErroDeDominio("Cautela inexistente");
   }
 
   static IdCautela(cautela: Cautela | Id | string): string {

@@ -8,61 +8,61 @@ import { useElectron } from "../../../hooks/useElectron";
 import { ErrosContext } from "../../../contexts/ErrosContext";
 
 export default function page() {
-    const {livro,setLivro} = useContext(LivroContext)
-    const { setErros } = useContext(ErrosContext)
-    const {fecharCautela} = useElectron()
-    const handleDescautelar = (cautela:Cautela) => {
-      fecharCautela.executar({livro,cautela})
+  const { livro, setLivro } = useContext(LivroContext)
+  const { addErro } = useContext(ErrosContext)
+  const { fecharCautela } = useElectron()
+  const handleDescautelar = (cautela: Cautela) => {
+    fecharCautela({ livro, cautela })
       .then(setLivro)
-      .catch(setErros)
-    }
+      .catch(addErro)
+  }
 
-    const columns =[
-        {
-            key:"itens",
-            label:"MATERIAIS"
+  const columns = [
+    {
+      key: "itens",
+      label: "MATERIAIS"
     },
-        {
-            key:"militar",
-            label:"MILITAR"
+    {
+      key: "militar",
+      label: "MILITAR"
     },
-        {
-            key:"timestamp",
-            label:"DATA"
+    {
+      key: "timestamp",
+      label: "DATA"
     },
-        {
-            key:"descautelar",
-            label:"DESCAUTELAR"
+    {
+      key: "descautelar",
+      label: "DESCAUTELAR"
     },
 
 
-]
-    return (
-        <Table className="grow" classNames={{th:"text-center",td:"text-center"}}>
-        <TableHeader columns={columns}>
-          {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-        </TableHeader>
-        <TableBody items={livro.cautelas.todas}>
-          {(cautela) => (
-            <TableRow key={cautela.id.valor}>
-              {(columnKey) => columnKey === "itens" ?
-                <TableCell>{
-                  <div className="flex flex-row flex-wrap justify-center gap-1">
-                    {cautela.itens.todos.map(i => <Chip color="default" size="sm" variant="flat">{i.nome}</Chip>)}
-                  </div>
-                }</TableCell> :
+  ]
+  return (
+    <Table className="grow" classNames={{ th: "text-center", td: "text-center" }}>
+      <TableHeader columns={columns}>
+        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+      </TableHeader>
+      <TableBody items={livro.cautelas.todas}>
+        {(cautela) => (
+          <TableRow key={cautela.id.valor}>
+            {(columnKey) => columnKey === "itens" ?
+              <TableCell>{
+                <div className="flex flex-row flex-wrap justify-center gap-1">
+                  {cautela.itens.todos.map(i => <Chip color="default" size="sm" variant="flat">{i.nome}</Chip>)}
+                </div>
+              }</TableCell> :
               columnKey === "militar" ?
                 <TableCell>{cautela.militar.nome.completo}</TableCell> :
-              columnKey === "descautelar" ?
-                <TableCell>
+                columnKey === "descautelar" ?
+                  <TableCell>
                     <Button isIconOnly color="danger" variant="ghost" className="text-lg text-red-600" onPress={() => handleDescautelar(cautela)}>
                       <DescautelarIcon />
                     </Button>
-                </TableCell> :
-              <TableCell>{new Date(Number(cautela.timestamp)).toLocaleDateString()}</TableCell>}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    )
+                  </TableCell> :
+                  <TableCell>{new Date(Number(cautela.timestamp)).toLocaleDateString()}</TableCell>}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  )
 }
