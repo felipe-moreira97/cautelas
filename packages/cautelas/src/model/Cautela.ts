@@ -5,18 +5,21 @@ import {
   MilitarProps,
   Militar,
 } from "common";
-import Item, { ItemProps } from "./Item";
+import { ItemProps } from "./Item";
 import Itens from "./Itens";
+import { MaterialProps } from "./Material";
 
 export interface CautelaProps extends EntidadeProps {
   timestamp?: string;
   itens: ItemProps[];
+  materiais: MaterialProps[];
   militar: MilitarProps;
 }
 
 export default class Cautela extends Entidade<Cautela, CautelaProps> {
   readonly timestamp: string;
   readonly itens: Itens;
+  readonly materiais: Materiais;
   readonly militar: Militar;
 
   constructor(props: CautelaProps) {

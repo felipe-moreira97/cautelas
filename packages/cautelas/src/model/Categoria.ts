@@ -2,7 +2,7 @@ import { Entidade, EntidadeProps, TextoSimles } from "common";
 
 export interface CategoriaProps extends EntidadeProps {
   nome: string;
-  temNumeroDeSerie?: boolean;
+  temNumeroDeSerie: boolean;
 }
 
 export default class Categoria extends Entidade<Categoria, CategoriaProps> {

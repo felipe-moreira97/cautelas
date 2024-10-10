@@ -91,6 +91,7 @@ export default class Livro extends Entidade<Livro, LivroProps> {
   }
 
   inserirItem(item: Item): Livro {
+    if (this.itens.porCategoria(item.categoria).todos.some(i => i.numeroDeSerie.completo === item.numeroDeSerie.completo)) throw new ErroDeDominio("Número de série já incluído na categoria")
     if (!this.itens.contem(item)) {
       return this.clone({
         ...this.props,
