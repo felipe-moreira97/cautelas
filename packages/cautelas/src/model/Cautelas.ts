@@ -2,6 +2,8 @@ import { ErroDeDominio, Id } from "common";
 import Cautela, { CautelaProps } from "./Cautela";
 import Itens from "./Itens";
 import { Militares } from "./Militares";
+import Materiais from "./Materiais";
+import { MaterialProps } from "./Material";
 
 export default class Cautelas {
   readonly todas: Cautela[];
@@ -20,6 +22,24 @@ export default class Cautelas {
 
   get todosItens(): Itens {
     return new Itens(this.todas.flatMap((c) => c.itens.props));
+  }
+
+  get todosMateriais():Materiais {
+    return new Materiais(this.todas
+        .flatMap(c => c.materiais.props).reduce((materiaisCautelados,material,j,arr) => {
+          const materialExistente = materiaisCautelados.find(m => m.nomeCategoria === material.nomeCategoria)
+          const index = materiaisCautelados.findIndex(m => m.nomeCategoria === material.nomeCategoria)
+          if (materialExistente) {
+            const quantidade = materialExistente.quantidade + material.quantidade
+            materiaisCautelados.splice(index,1,{
+              ...materialExistente,
+              quantidade
+            })
+          } else {
+            materiaisCautelados.push(material)
+          }
+          return materiaisCautelados
+        },[] as MaterialProps[]))
   }
 
   get todosMilitares(): Militares {

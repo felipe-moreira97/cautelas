@@ -1,28 +1,28 @@
 import { Popover, PopoverTrigger, Button, PopoverContent, Input, Switch } from "@nextui-org/react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { PlusIcon } from "./icons/PlusIcon";
-import { Categoria } from "cautelas";
+import { SelectCategoriaType } from "./IncluirMaterialModal";
 
 export default function NovaCategoriaPopover({setCategorias}:{
-  setCategorias:Dispatch<SetStateAction<Categoria[]>>,
+  setCategorias:Dispatch<SetStateAction<SelectCategoriaType[]>>,
 
 }) {
-    const [temNumeroDeSerie,setTemNumeroDeSerie] = useState<boolean>(false)
+    const [item,setItem] = useState<boolean>(false)
     const [nome,setNome] = useState<string>("")
     const [isOpen, setIsOpen] = useState(false);
 
     const handleClick = () => {
-      const categoria = new Categoria({
+      const categoria = {
         nome,
-        temNumeroDeSerie
-      })
+        item
+      }
       setCategorias(categorias => {
         const novaLista = [...categorias]
         novaLista.push(categoria)
         return novaLista
       })
       setNome("")
-      setTemNumeroDeSerie(false)
+      setItem(false)
       setIsOpen(false)
     }
 
@@ -38,7 +38,7 @@ export default function NovaCategoriaPopover({setCategorias}:{
                     Nova Categoria
                   </h3>
                   <Input  label="Nome" size="sm" type="text" variant="underlined" value={nome} onValueChange={setNome} />
-                  <Switch isSelected={temNumeroDeSerie} onValueChange={setTemNumeroDeSerie} size="sm"><p className="text-xs text-default-800">Possui número de série?</p></Switch>
+                  <Switch isSelected={item} onValueChange={setItem} size="sm"><p className="text-xs text-default-800">Possui número de série?</p></Switch>
                   <Button color="primary" className="mt-2" size="sm" onPress={handleClick}>Adicionar</Button>
                 </div>
             )}

@@ -1,7 +1,7 @@
 import { Entidade, EntidadeProps, Quantidade, TextoSimles } from "common";
 
 export interface MaterialProps extends EntidadeProps {
-    nome: string,
+    nomeCategoria: string,
     quantidade: number
 }
 
@@ -10,7 +10,7 @@ export default class Material extends Entidade<Material, MaterialProps> {
     readonly quantidade: Quantidade;
     constructor(props: MaterialProps) {
         super(props)
-        this.nomeCategoria = new TextoSimles(props.nome, 3, 120, "nome", "Material")
+        this.nomeCategoria = new TextoSimles(props.nomeCategoria, 3, 120, "nome", "Material")
         this.quantidade = new Quantidade(props.quantidade, "quantidade", "Material")
     }
 

@@ -1,27 +1,26 @@
-import { Select, SelectItem, SharedSelection} from "@nextui-org/react";
-import { Categoria } from "cautelas";
-
+import { Select, SelectItem } from "@nextui-org/react";
+import {SelectCategoriaType} from "./IncluirMaterialModal"
 
 
 export default function SelectCategoria({categorias,value,setValue}:{
-    categorias:Categoria[],
-    value:Categoria | undefined,
-    setValue:(keys:Categoria)=> void
+    categorias:SelectCategoriaType[],
+    value:SelectCategoriaType | undefined,
+    setValue:(keys:SelectCategoriaType)=> void
 }) {
   return (
       <Select 
         label="Selecione a categoria"
         isRequired
         variant="underlined"
-        selectedKeys={value && [value.id.valor]}
+        selectedKeys={value && [value.nome]}
         onChange={e => {
-          const selecionado = categorias.find(c => c.id.valor === e.target.value)
+          const selecionado = categorias.find(c => c.nome === e.target.value)
           selecionado && setValue(selecionado)
         }}
       >
         {categorias.map((categoria) => (
-          <SelectItem key={categoria.id.valor}>
-            {categoria.nome.completo}
+          <SelectItem key={categoria.nome}>
+            {categoria.nome}
           </SelectItem>
         ))}
       </Select>

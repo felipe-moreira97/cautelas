@@ -1,4 +1,4 @@
-import { Item } from "cautelas";
+import { Item, Material } from "cautelas";
 import { useElectron } from "../hooks/useElectron";
 import { useContext, useState } from "react";
 import { LivroContext } from "../contexts/LivroContext";
@@ -6,22 +6,31 @@ import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader
 import { EditIcon } from "./icons/EditIcon";
 import { ErrosContext } from "../contexts/ErrosContext";
 
-export default function EditarMaterialModal({ material }: { material: Item }) {
+export default function EditarMaterialModal({ material }: { material: Item | Material }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { livro, setLivro } = useContext(LivroContext)
   const { addErro } = useContext(ErrosContext)
-  const { editarItem } = useElectron()
-  const [numeroDeSerie, setNumeroDeSerie] = useState<string>(material.numeroDeSerie!.completo)
+  const { editarItem, editarMaterial } = useElectron()
+  const eItem = material instanceof Item
+  const [numeroDeSerie, setNumeroDeSerie] = useState<string>(eItem ? material.numeroDeSerie.completo : "")
+  const [quantidade, setQuantidade] = useState<number>(!eItem ? material.quantidade.valor : 0)
 
 
   function handleEditar() {
-    const itemProps = {
+    eItem ? editarItem({
+      livro,
+      itemProps:{
       ...material.props,
       numeroDeSerie
     }
-    editarItem({
+  })
+  .then(setLivro)
+  .catch(addErro) : editarMaterial({
       livro,
-      itemProps
+      materialProps:{
+        ...material.props,
+        quantidade
+      }
     })
       .then(setLivro)
       .catch(addErro)
@@ -36,9 +45,23 @@ export default function EditarMaterialModal({ material }: { material: Item }) {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Editar Material</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Editar Material {material.nome}</ModalHeader>
               <ModalBody>
-                <Input type="text" variant="underlined" label="número de série" value={numeroDeSerie} onValueChange={setNumeroDeSerie} />
+                {
+                  eItem ? 
+                  <Input 
+                  type="text" 
+                  variant="underlined" 
+                  label="número de série" 
+                  value={numeroDeSerie} 
+                  onValueChange={setNumeroDeSerie} /> :
+                  <Input 
+                  type="number" 
+                  variant="underlined" 
+                  label="quantidade" 
+                  value={quantidade.toString()} 
+                  onValueChange={e => setQuantidade(parseInt(e))} /> 
+                }
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>

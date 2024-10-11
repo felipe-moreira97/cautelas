@@ -48,7 +48,8 @@ export default function page() {
             {(columnKey) => columnKey === "itens" ?
               <TableCell>{
                 <div className="flex flex-row flex-wrap justify-center gap-1">
-                  {cautela.itens.todos.map(i => <Chip color="default" size="sm" variant="flat">{i.nome}</Chip>)}
+                  {cautela.itens.todos.map(i => <Chip color="default" size="sm" variant="flat">{i.nome}</Chip>)
+                  .concat(cautela.materiais.todos.map(m => <Chip color="default" size="sm" variant="flat">{m.nome}</Chip>))}
                 </div>
               }</TableCell> :
               columnKey === "militar" ?

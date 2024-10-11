@@ -1,5 +1,5 @@
 "use client"
-import { Cautela, EditarItem, EditarMilitar, ExcluirItem, ExcluirMilitar, FecharCautela, Item, ItemProps, Livro, LivroProps, NovaCautela, NovoLivro, NovoMilitar, ObterLivro, RepositorioLivro, SalvarLivro } from "cautelas"
+import { CategoriaProps, Cautela, EditarItem, EditarMilitar, ExcluirItem, ExcluirMilitar, FecharCautela, Item, ItemProps, Livro, LivroProps, Material, MaterialProps, NovaCautela, NovoLivro, NovoMilitar, ObterLivro, RepositorioLivro, SalvarLivro } from "cautelas"
 import NovoItem from "cautelas/dist/useCases/NovoItem"
 import { Militar, MilitarProps } from "common"
 
@@ -21,12 +21,13 @@ export function useElectron() {
     const novoLivro = new NovoLivro(repo)
     const abrirLivro = new ObterLivro(repo)
 
-    const novaCautela = async ({ livro, itens, militar }: {
+    const novaCautela = async ({ livro, itens, militar, materiais }: {
         livro: Livro,
         itens: Item[],
-        militar: Militar
+        militar: Militar,
+        materiais:Material[]
     }) => new NovaCautela().executar({
-        itens, livro
+        itens, livro, materiais
     }, militar).then(livro => salvarLivro.executar(livro))
 
     const fecharCautela = async ({ cautela, livro }: {
@@ -48,11 +49,34 @@ export function useElectron() {
         }).then(livro => salvarLivro.executar(livro))
     }
 
-    const editarItem = async ({ livro, itemProps }: {
+    const novoMaterial = async ({ livro, materialProps }: {
         livro: Livro,
-        itemProps: ItemProps
+        materialProps: MaterialProps
     }) => {
+        
+        const item = new Material(materialProps)
+        return new NovoItem().executar({
+            item,
+            livro
+        }).then(livro => salvarLivro.executar(livro))
+    }
+
+    const editarItem = async ({ livro, itemProps }: {
+  livro: Livro
+  itemProps: ItemProps
+}) => {
         const item = new Item(itemProps)
+        return new EditarItem().executar({
+            item,
+            livro
+        }).then(livro => salvarLivro.executar(livro))
+    }
+
+    const editarMaterial = async ({ livro, materialProps }: {
+        livro: Livro,
+        materialProps: MaterialProps
+    }) => {
+        const item = new Material(materialProps)
         return new EditarItem().executar({
             item,
             livro
@@ -61,7 +85,7 @@ export function useElectron() {
 
     const excluirItem = async ({ livro, item }: {
         livro: Livro,
-        item: Item
+        item: Item | Material
     }) => {
         return new ExcluirItem().executar({
             item,
@@ -105,6 +129,8 @@ export function useElectron() {
     return {
         novaCautela,
         fecharCautela,
+        novoMaterial,
+        editarMaterial,
         novoItem,
         editarItem,
         excluirItem,

@@ -1,8 +1,8 @@
 import { CasoDeUso } from "common";
-import { Item, Livro } from "../model";
+import { Item, Livro, Material } from "../model";
 
 type Entrada = {
-  item: Item;
+  item: Item | Material;
   livro: Livro;
 };
 

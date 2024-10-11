@@ -1,4 +1,4 @@
-import { Id } from "common";
+import { ErroDeDominio } from "common";
 import Material, { MaterialProps } from "./Material";
 
 export default class Materiais {
@@ -21,9 +21,22 @@ export default class Materiais {
 
   }
 
-  incluir(material: Material): Materiais {
-    if (this.categorias.includes(material.nomeCategoria.completo)) {
+  getMaterialExistenteEIndex(material:Material):[Material | undefined,number] {
+    const materialExistente = this.todos.find(m => m.nomeCategoria.completo === material.nomeCategoria.completo)
+    const index = this.todos.findIndex(m => m.nomeCategoria.completo === material.nomeCategoria.completo)
+    return [materialExistente,index]
 
+  }
+  incluir(material: Material): Materiais {
+    const [materialExistente,index] = this.getMaterialExistenteEIndex(material)
+    if (materialExistente) {
+      const quantidade = materialExistente.quantidade.valor + material.quantidade.valor
+      const materiais = [...this.props];
+      materiais.splice(index,1,{
+        ...materialExistente.props,
+        quantidade
+      });
+      return new Materiais(materiais);
     }
     else {
       const materiais = [...this.props];
@@ -32,57 +45,54 @@ export default class Materiais {
     }
   }
 
-  excluir(item: Item | Id | string): Itens {
-    const ItemId = Itens.IdItem(item);
-    return new Itens(this.props.filter((i) => i.id !== ItemId));
+  excluir(material: Material): Materiais {
+    const [materialExistente,index] = this.getMaterialExistenteEIndex(material)
+    const materiais = [...this.props];
+    if(materialExistente) {
+        if(materialExistente.quantidade.maior(material.quantidade)) {
+          const quantidade = materialExistente.quantidade.valor - material.quantidade.valor
+          materiais.splice(index,1,{
+            ...materialExistente.props,
+            quantidade
+          });
+          return new Materiais(materiais);
+        } else {
+          materiais.splice(index,1);
+          return new Materiais(materiais);
+        }
+    }
+    return this;
   }
-
-  contem(item: Item | Id | string): boolean {
-    const ItemId = Itens.IdItem(item);
-    return this.todos.some((i) => i.id.valor === ItemId);
+  editar(material:Material):Materiais {
+    const [materialExistente,index] = this.getMaterialExistenteEIndex(material)
+    const materiais = [...this.props];
+    if(materialExistente) {
+      materiais.splice(index,1,{
+        ...material.props,
+        id:materialExistente.id.valor
+      });
+      return new Materiais(materiais);
+    }
+    throw new ErroDeDominio("Material inexistente")
   }
-
-  intersecaoCom(itens: Item[]): Itens {
-    return new Itens(
-      this.todos
-        .filter((i) => itens.map(Itens.IdItem).includes(i.id.valor))
-        .map((i) => i.props),
-    );
+  editarNome(material:Material):Materiais {
+    const [materialExistente,index] = this.getMaterialExistenteEIndex(material)
+    const materiais = [...this.props];
+    if(materialExistente) {
+      materiais.splice(index,1,{
+        ...materialExistente.props,
+        nomeCategoria:material.nomeCategoria.completo
+      });
+      return new Materiais(materiais);
+    }
+    throw new ErroDeDominio("Material inexistente")
   }
-
-  porCategoria(categoria: Categoria | Id | string): Itens {
-    const categoriaId = this.IdCategoria(categoria);
-    return new Itens(
-      this.todos
-        .filter((i) => i.categoria.id.valor === categoriaId)
-        .map((i) => i.props),
-    );
+  contem(material:Material):boolean {
+    const [materialExistente] = this.getMaterialExistenteEIndex(material)
+      return materialExistente ? materialExistente.quantidade.maiorOuIgual(material.quantidade) : false
   }
-
-  get porCategorias(): ItensPorCategoria[] {
-    const categorias = this.categorias;
-    return categorias.map((categoria) => {
-      const itens = this.porCategoria(categoria);
-      return {
-        categoria,
-        itens,
-      };
-    });
-  }
-
-  private IdCategoria(categoria: Categoria | Id | string): string {
-    return categoria instanceof Categoria
-      ? categoria.id.valor
-      : categoria instanceof Id
-        ? categoria.valor
-        : categoria;
-  }
-
-  static IdItem(item: Item | Id | string): string {
-    return item instanceof Item
-      ? item.id.valor
-      : item instanceof Id
-        ? item.valor
-        : item;
+  existe(material:Material):boolean {
+    const [materialExistente] = this.getMaterialExistenteEIndex(material)
+    return !!materialExistente
   }
 }

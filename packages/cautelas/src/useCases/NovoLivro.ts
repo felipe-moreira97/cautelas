@@ -9,6 +9,7 @@ export default class NovoLivro implements CasoDeUso<any, Livro | undefined, Mili
     .novo(new Livro({
       cautelas: [],
       itens: [],
+      materiais:[],
       militares:[]
     }).props)
     .then((l) => l && new Livro(l));

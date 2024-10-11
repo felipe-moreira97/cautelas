@@ -13,7 +13,8 @@ export const LivroContext = createContext<TypeLivroContext>(
         livro: new Livro({
                 cautelas:[],
                 itens:[],
-                militares:[]
+                materiais:[],
+                militares:[],
             }),
         setLivro:() => null
     }

@@ -8,6 +8,7 @@ import {
 import { ItemProps } from "./Item";
 import Itens from "./Itens";
 import { MaterialProps } from "./Material";
+import Materiais from "./Materiais";
 
 export interface CautelaProps extends EntidadeProps {
   timestamp?: string;
@@ -24,8 +25,9 @@ export default class Cautela extends Entidade<Cautela, CautelaProps> {
 
   constructor(props: CautelaProps) {
     super(props);
-    if (props.itens.length <= 0) throw new ErroDeDominio("Cautela sem Materiais");
-    this.itens = new Itens(props.itens)
+    if (props.itens.length <= 0 && props.materiais.length <= 0) throw new ErroDeDominio("Cautela sem Materiais");
+    this.itens = new Itens(props.itens);
+    this.materiais = new Materiais(props.materiais);
     this.timestamp = props.timestamp ?? Date.now().toString();
     this.militar = new Militar(props.militar);
   }

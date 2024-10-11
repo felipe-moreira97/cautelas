@@ -6,7 +6,8 @@ import { LivroContext } from "./LivroContext"
 const initialState: Livro = new Livro({
         cautelas:[],
         itens:[],
-        militares:[]
+        materiais:[],
+        militares:[],
        })
 
 export default function LivroProvider({ children }: { children: React.ReactNode }) {
