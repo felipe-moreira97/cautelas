@@ -9,7 +9,7 @@ import Materiais from "./Materiais";
 
 export interface LivroProps extends EntidadeProps {
   itens: ItemProps[];
-  materiais:MaterialProps[];
+  materiais: MaterialProps[];
   cautelas: CautelaProps[];
   militares: MilitarProps[];
 }
@@ -39,7 +39,7 @@ export default class Livro extends Entidade<Livro, LivroProps> {
     return this.cautelas.todosItens;
   }
 
-  get materiaisCautelados():Materiais {
+  get materiaisCautelados(): Materiais {
     return this.cautelas.todosMateriais;
   }
 
@@ -60,7 +60,7 @@ export default class Livro extends Entidade<Livro, LivroProps> {
         const [materialCautelado] = this.materiaisCautelados.getMaterialExistenteEIndex(material)
         if (materialCautelado) {
           const quantidade = material.quantidade.valor - materialCautelado.quantidade.valor
-          return {...material.props,quantidade}
+          return { ...material.props, quantidade }
         } else {
           return material.props
         }
@@ -69,12 +69,12 @@ export default class Livro extends Entidade<Livro, LivroProps> {
   }
 
   get itensTabeladosPorCategoria(): ItensTabeladoPorCategoria[] {
-    
+
     const itensCautelados = this.itensCautelados.porCategorias
     const itensDisponiveis = this.itensDisponiveis.porCategorias
     const itensExistentes = this.itens.porCategorias
 
-    const itens =itensExistentes.map((i) => ({
+    const itens = itensExistentes.map((i) => ({
       categoria: i.categoria.nome.completo,
       todos: i.itens.length,
       cautelados: itensCautelados.find(j => j.categoria.igual(i.categoria))?.itens.length || 0,
@@ -86,32 +86,32 @@ export default class Livro extends Entidade<Livro, LivroProps> {
     const materiaisExistentes = this.materiais.todos
 
     const materiais = materiaisExistentes.map((i) => ({
-      categoria:i.nomeCategoria.completo,
-      todos:i.quantidade.valor,
-      cautelados:materiaisCautelados.find(j => j.nomeCategoria.completo === i.nomeCategoria.completo)?.quantidade.valor || 0,
+      categoria: i.nomeCategoria.completo,
+      todos: i.quantidade.valor,
+      cautelados: materiaisCautelados.find(j => j.nomeCategoria.completo === i.nomeCategoria.completo)?.quantidade.valor || 0,
       disponiveis: materiaisDisponiveis.find(j => j.nomeCategoria.completo === i.nomeCategoria.completo)?.quantidade.valor || 0
     }))
 
     return itens.concat(materiais)
   }
 
-  novaCautela(militar: Militar, itens: Item[],materiais:Material[]): Livro {
+  novaCautela(militar: Militar, itens: Item[], materiais: Material[]): Livro {
     if (!militar) throw new ErroDeDominio("É necessário um Militar para criar Cautela.")
-      const itensValidado = this.novaCautelaItens(...itens)
+    const itensValidado = this.novaCautelaItens(...itens)
     const materiaisValidado = this.novaCautelaMateriais(...materiais)
     if (!itensValidado.length && !materiaisValidado.length) throw new ErroDeDominio("É necessário ao menos um material para criar Cautela")
     const novaCautela = new Cautela({
-      itens:itensValidado,
-      materiais:materiaisValidado,
-      militar:militar.props,
+      itens: itensValidado,
+      materiais: materiaisValidado,
+      militar: militar.props,
     })
     return this.clone({
       ...this.props,
-      cautelas:[...this.cautelas.props, novaCautela.props]
+      cautelas: [...this.cautelas.props, novaCautela.props]
     })
-    }
+  }
 
-  private novaCautelaItens(...itens:Item[]):ItemProps[] {
+  private novaCautelaItens(...itens: Item[]): ItemProps[] {
     const itensExistentes = this.itens.intersecaoCom(itens);
     if (itensExistentes.length === itens.length) {
       const itensCautelados = this.itensCautelados.intersecaoCom(itens);
@@ -128,7 +128,7 @@ export default class Livro extends Entidade<Livro, LivroProps> {
     throw new ErroDeDominio(`Material inexistente ${msg}`);
   }
 
-  private novaCautelaMateriais(...materiais:Material[]):MaterialProps[] {
+  private novaCautelaMateriais(...materiais: Material[]): MaterialProps[] {
     if (materiais.every(m => this.materiaisDisponiveis.contem(m))) {
       return materiais.map(m => m.props)
     } else {
@@ -147,15 +147,15 @@ export default class Livro extends Entidade<Livro, LivroProps> {
     });
   }
 
-  inserirItem(item:Material | Item):Livro {
+  inserirItem(item: Material | Item): Livro {
     return item instanceof Material ? this.inserirMaterial(item) : this.adicionarItem(item)
   }
 
-  removerItem(item:Material | Item):Livro {
+  removerItem(item: Material | Item): Livro {
     return item instanceof Material ? this.excluirMaterial(item) : this.excluirItem(item)
   }
 
-  editarItem(item:Material | Item):Livro {
+  editarItem(item: Material | Item): Livro {
     return item instanceof Material ? this.editarMaterial(item) : this.modificarItem(item)
   }
 
@@ -212,25 +212,25 @@ export default class Livro extends Entidade<Livro, LivroProps> {
     }
   }
 
-  private inserirMaterial(material:Material):Livro {
+  private inserirMaterial(material: Material): Livro {
     return this.clone({
       ...this.props,
-      materiais:this.materiais.incluir(material).props
+      materiais: this.materiais.incluir(material).props
     })
   }
 
-  private excluirMaterial(material:Material):Livro {
+  private excluirMaterial(material: Material): Livro {
     if (this.materiaisDisponiveis.contem(material)) {
       return this.clone({
         ...this.props,
-        materiais:this.materiais.excluir(material).props
+        materiais: this.materiais.excluir(material).props
       })
     } else {
       throw new ErroDeDominio("Material cautelado")
     }
   }
 
-  private editarMaterial(material:Material): Livro {
+  private editarMaterial(material: Material): Livro {
     if (this.materiais.existe(material)) {
       const [materialCautelado] = this.materiaisCautelados.getMaterialExistenteEIndex(material)
       if (materialCautelado) {
@@ -244,28 +244,28 @@ export default class Livro extends Entidade<Livro, LivroProps> {
               }).props
             } else return cautela.props
           })
+          return this.clone({
+            ...this.props,
+            materiais: this.materiais.editar(material).props,
+            cautelas
+          })
+        } else {
+          throw new ErroDeDominio("Material cautelado")
+        }
+      }
+      else {
         return this.clone({
           ...this.props,
-          materiais:this.materiais.editar(material).props,
-          cautelas
+          materiais: this.materiais.editar(material).props,
         })
-      } else {
-        throw new ErroDeDominio("Material cautelado")
       }
-    }
-  else {
-    return this.clone({
-      ...this.props,
-      materiais:this.materiais.editar(material).props,
-    })
-    }
     } else {
       throw new ErroDeDominio("Material inexistente")
     }
   }
 
   inserirMilitar(militar: Militar): Livro {
-    if (!this.militares.contem(militar)) {
+    if (!this.militares.contemCpf(militar) && !this.militares.contem(militar)) {
       return this.clone({
         ...this.props,
         militares: this.militares.incluir(militar).props,
@@ -288,15 +288,17 @@ export default class Livro extends Entidade<Livro, LivroProps> {
   }
 
   editarMilitar(militar: Militar): Livro {
-    if (this.militares.contem(militar)) {
+    if (this.militares.todos.map(m => m.id.valor).includes(militar.id.valor)) {
       const militares = this.militares.excluir(militar).incluir(militar).props
       if (this.cautelas.todosMilitares.contem(militar)) {
         const cautelas = this.cautelas.todas.map(c => {
-          c.militar.igual(militar)
-          return c.clone({
-            ...c.props,
-            militar: militar.props
-          }).props
+          if (c.militar.igual(militar)) {
+            return c.clone({
+              ...c.props,
+              militar: militar.props
+            }).props
+          }
+          return c.props
         })
         return this.clone({
           ...this.props,
