@@ -19,21 +19,25 @@ export default function EditarMaterialModal({ material }: { material: Item | Mat
   function handleEditar() {
     eItem ? editarItem({
       livro,
-      itemProps:{
-      ...material.props,
-      numeroDeSerie
-    }
-  })
-  .then(setLivro)
-  .catch(addErro) : editarMaterial({
-      livro,
-      materialProps:{
+      itemProps: {
         ...material.props,
-        quantidade
+        numeroDeSerie
       }
     })
       .then(setLivro)
-      .catch(addErro)
+      .catch(addErro) : editarMaterial({
+        livro,
+        materialProps: {
+          ...material.props,
+          quantidade
+        }
+      })
+        .then(setLivro)
+        .catch(addErro)
+        .finally(() => {
+          setNumeroDeSerie(eItem ? material.numeroDeSerie.completo : "")
+          setQuantidade(!eItem ? material.quantidade.valor : 0)
+        })
   }
 
   return (
@@ -48,19 +52,19 @@ export default function EditarMaterialModal({ material }: { material: Item | Mat
               <ModalHeader className="flex flex-col gap-1">Editar Material {material.nome}</ModalHeader>
               <ModalBody>
                 {
-                  eItem ? 
-                  <Input 
-                  type="text" 
-                  variant="underlined" 
-                  label="número de série" 
-                  value={numeroDeSerie} 
-                  onValueChange={setNumeroDeSerie} /> :
-                  <Input 
-                  type="number" 
-                  variant="underlined" 
-                  label="quantidade" 
-                  value={quantidade.toString()} 
-                  onValueChange={e => setQuantidade(parseInt(e))} /> 
+                  eItem ?
+                    <Input
+                      type="text"
+                      variant="underlined"
+                      label="número de série"
+                      value={numeroDeSerie}
+                      onValueChange={setNumeroDeSerie} /> :
+                    <Input
+                      type="number"
+                      variant="underlined"
+                      label="quantidade"
+                      value={quantidade.toString()}
+                      onValueChange={e => setQuantidade(parseInt(e))} />
                 }
               </ModalBody>
               <ModalFooter>

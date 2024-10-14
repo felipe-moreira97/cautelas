@@ -9,8 +9,8 @@ import { ErrosContext } from "../contexts/ErrosContext";
 import { Categoria } from "cautelas";
 
 export type SelectCategoriaType = {
-  nome:string,
-  item:boolean
+  nome: string,
+  item: boolean
 }
 
 export default function IncluirMaterialModal() {
@@ -21,40 +21,41 @@ export default function IncluirMaterialModal() {
 
   const [categoria, setCategoria] = useState<SelectCategoriaType | undefined>();
   const [categorias, setCategorias] = useState<SelectCategoriaType[]>(livro.itens.categorias
-    .map(c => ({nome:c.nome.completo, item:true}))
-    .concat(livro.materiais.categorias.map(c => ({nome:c,item:false}))));
+    .map(c => ({ nome: c.nome.completo, item: true }))
+    .concat(livro.materiais.categorias.map(c => ({ nome: c, item: false }))));
   const [numeroDeSerie, setNumeroDeSerie] = useState<string>("");
   const [quantidade, setQuantidade] = useState<number>(1);
 
   function handleIncluir() {
-    if(!categoria) throw new Error("sem categoria")
-      categoria.item ?
-    novoItem({
-      itemProps: {
-        categoria: livro.itens.categorias.find(c => c.nome.completo === categoria.nome)?.props || new Categoria({nome:categoria.nome}).props,
-        numeroDeSerie
-      },
-      livro
-    })    
-    .then(novoLivro => {
-      setLivro(novoLivro)
-      setCategoria(undefined)
-      setNumeroDeSerie("")
-      setQuantidade(1)
-    }).catch(addErro) :
-    novoMaterial({
-      materialProps:{
-        nomeCategoria:categoria.nome,
-        quantidade
-      },
-      livro
-    })
-    .then(novoLivro => {
-      setLivro(novoLivro)
-      setCategoria(undefined)
-      setNumeroDeSerie("")
-      setQuantidade(1)
-    }).catch(addErro)
+    if (!categoria) throw new Error("sem categoria")
+    categoria.item ?
+      novoItem({
+        itemProps: {
+          categoria: livro.itens.categorias.find(c => c.nome.completo === categoria.nome)?.props || new Categoria({ nome: categoria.nome }).props,
+          numeroDeSerie
+        },
+        livro
+      })
+        .then(novoLivro => {
+          setLivro(novoLivro)
+          setCategoria(undefined)
+          setNumeroDeSerie("")
+          setQuantidade(1)
+        }).catch(addErro) :
+      novoMaterial({
+        materialProps: {
+          nomeCategoria: categoria.nome,
+          quantidade
+        },
+        livro
+      })
+        .then(novoLivro => setLivro(novoLivro))
+        .catch(addErro)
+        .finally(() => {
+          setCategoria(undefined)
+          setNumeroDeSerie("")
+          setQuantidade(1)
+        })
   }
 
   return (
@@ -70,9 +71,9 @@ export default function IncluirMaterialModal() {
                   <SelectCategoria categorias={categorias} value={categoria} setValue={setCategoria} />
                   <NovaCategoriaPopover setCategorias={setCategorias} />
                 </div>
-                {categoria?.item ? 
-                <Input type="text" variant="underlined" label="número de série" value={numeroDeSerie} onValueChange={setNumeroDeSerie} /> :
-                <Input type="number" variant="underlined" label="quantidade" step={1} min={1} value={quantidade.toString()} onValueChange={e => setQuantidade(parseInt(e))}/>
+                {categoria?.item ?
+                  <Input type="text" variant="underlined" label="número de série" value={numeroDeSerie} onValueChange={setNumeroDeSerie} /> :
+                  <Input type="number" variant="underlined" label="quantidade" step={1} min={1} value={quantidade.toString()} onValueChange={e => setQuantidade(parseInt(e))} />
                 }
               </ModalBody>
               <ModalFooter>

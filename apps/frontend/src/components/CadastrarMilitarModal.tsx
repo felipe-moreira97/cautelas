@@ -24,10 +24,12 @@ export default function CadastrarMilitarModal() {
       livro,
       militarProps,
     }).then(novoLivro => {
-      setNome("")
-      setCpf("")
       setLivro(novoLivro)
     }).catch(addErro)
+      .finally(() => {
+        setNome("")
+        setCpf("")
+      })
   }
 
   return (

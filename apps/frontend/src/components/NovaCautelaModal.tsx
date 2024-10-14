@@ -16,7 +16,7 @@ export default function NovaCautelaModal() {
   const { addErro } = useContext(ErrosContext)
   const { novaCautela } = useElectron()
   const [itens, setItens] = useState<Item[]>([])
-  const [materiais,setMateriais] = useState<Material[]>([])
+  const [materiais, setMateriais] = useState<Material[]>([])
   const [militar, setMilitar] = useState<Militar | undefined>()
 
   function handleIncluir(close: () => void) {
@@ -24,11 +24,13 @@ export default function NovaCautelaModal() {
       novaCautela({ livro, itens, militar, materiais })
         .then(novoLivro => {
           setLivro(novoLivro)
+          close()
+        }).catch(addErro)
+        .finally(() => {
           setItens([])
           setMateriais([])
           setMilitar(undefined)
-          close()
-        }).catch(addErro)
+        })
     } else {
       addErro(new Error("Sem Militar"))
     }
@@ -49,13 +51,13 @@ export default function NovaCautelaModal() {
                   value={militar}
                   setValue={setMilitar}
                 />
-                <ListBoxMaterial 
-                itens={livro.itensDisponiveis}
-                materiais={livro.materiaisDisponiveis}
-                itensSelecionados={itens}
-                materiaisSelecionados={materiais}
-                setItens={setItens}
-                setMateriais={setMateriais}
+                <ListBoxMaterial
+                  itens={livro.itensDisponiveis}
+                  materiais={livro.materiaisDisponiveis}
+                  itensSelecionados={itens}
+                  materiaisSelecionados={materiais}
+                  setItens={setItens}
+                  setMateriais={setMateriais}
                 />
               </ModalBody>
               <ModalFooter>

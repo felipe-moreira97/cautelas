@@ -28,6 +28,10 @@ export default function EditarMilitarModal({ militar }: { militar: Militar }) {
       militarProps
     }).then(setLivro)
       .catch(addErro)
+      .finally(() => {
+        setNome(militar.nome.completo)
+        setCpf(militar.cpf.valor)
+      })
   }
 
   return (
