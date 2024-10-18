@@ -1,7 +1,8 @@
 import { Popover, PopoverTrigger, Button, PopoverContent, Input, Switch } from "@nextui-org/react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useContext } from "react";
 import { PlusIcon } from "./icons/PlusIcon";
 import { SelectCategoriaType } from "./IncluirMaterialModal";
+import { ErrosContext } from "../contexts/ErrosContext";
 
 export default function NovaCategoriaPopover({setCategorias}:{
   setCategorias:Dispatch<SetStateAction<SelectCategoriaType[]>>,
@@ -9,21 +10,33 @@ export default function NovaCategoriaPopover({setCategorias}:{
 }) {
     const [item,setItem] = useState<boolean>(false)
     const [nome,setNome] = useState<string>("")
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false)
+    const {addErro} = useContext(ErrosContext)
 
     const handleClick = () => {
+       let flag = false 
       const categoria = {
         nome,
         item
       }
       setCategorias(categorias => {
         const novaLista = [...categorias]
-        novaLista.push(categoria)
+        if (!novaLista.map(c => c.nome).includes(nome) && nome.length >= 3) {
+          novaLista.push(categoria)
+        } 
+        else {
+          flag = true
+        }
         return novaLista
       })
-      setNome("")
-      setItem(false)
-      setIsOpen(false)
+      if (!flag){
+        setNome("")
+        setItem(false)
+        setIsOpen(false) 
+      } else {
+        addErro(new Error("Categoria já incluída"))
+      }
+      
     }
 
     return (

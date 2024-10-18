@@ -17,7 +17,7 @@ export default function EditarMilitarModal({ militar }: { militar: Militar }) {
   const [cpf, setCpf] = useState<string>(militar.cpf.valor)
 
 
-  function handleEditar() {
+  function handleEditar(onClose) {
     const militarProps = {
       ...militar.props,
       cpf,
@@ -26,7 +26,10 @@ export default function EditarMilitarModal({ militar }: { militar: Militar }) {
     editarMilitar({
       livro,
       militarProps
-    }).then(setLivro)
+    }).then(livro => {
+      setLivro(livro)
+      onClose()
+  })
       .catch(addErro)
       .finally(() => {
         setNome(militar.nome.completo)
@@ -52,10 +55,7 @@ export default function EditarMilitarModal({ militar }: { militar: Militar }) {
                 <Button color="danger" variant="light" onPress={onClose}>
                   Cancelar
                 </Button>
-                <Button color="primary" onPress={e => {
-                  handleEditar()
-                  onClose()
-                }}>
+                <Button color="primary" onPress={e => handleEditar(onClose)}>
                   Editar
                 </Button>
               </ModalFooter>

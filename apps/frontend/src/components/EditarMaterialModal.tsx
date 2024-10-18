@@ -13,10 +13,10 @@ export default function EditarMaterialModal({ material }: { material: Item | Mat
   const { editarItem, editarMaterial } = useElectron()
   const eItem = material instanceof Item
   const [numeroDeSerie, setNumeroDeSerie] = useState<string>(eItem ? material.numeroDeSerie.completo : "")
-  const [quantidade, setQuantidade] = useState<number>(!eItem ? material.quantidade.valor : 0)
+  const [quantidade, setQuantidade] = useState<number>(!eItem ? material.quantidade.valor : 1)
 
 
-  function handleEditar() {
+  function handleEditar(onClose) {
     eItem ? editarItem({
       livro,
       itemProps: {
@@ -24,18 +24,26 @@ export default function EditarMaterialModal({ material }: { material: Item | Mat
         numeroDeSerie
       }
     })
-      .then(setLivro)
-      .catch(addErro) : editarMaterial({
+      .then(livro => {
+        setLivro(livro)
+        onClose()
+  })
+      .catch(addErro)
+      .finally(() => {
+        setNumeroDeSerie(eItem ? material.numeroDeSerie.completo : "")
+      }) : editarMaterial({
         livro,
         materialProps: {
           ...material.props,
           quantidade
         }
       })
-        .then(setLivro)
+      .then(livro => {
+        setLivro(livro)
+        onClose()
+  })
         .catch(addErro)
         .finally(() => {
-          setNumeroDeSerie(eItem ? material.numeroDeSerie.completo : "")
           setQuantidade(!eItem ? material.quantidade.valor : 0)
         })
   }
@@ -71,10 +79,7 @@ export default function EditarMaterialModal({ material }: { material: Item | Mat
                 <Button color="danger" variant="light" onPress={onClose}>
                   Cancelar
                 </Button>
-                <Button color="primary" onPress={e => {
-                  handleEditar()
-                  onClose()
-                }}>
+                <Button color="primary" onPress={e => handleEditar(onClose)}>
                   Editar
                 </Button>
               </ModalFooter>

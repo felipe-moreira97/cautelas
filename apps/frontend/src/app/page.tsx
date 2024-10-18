@@ -21,7 +21,7 @@ export default function page() {
         const resp = isNew ? await novoLivro.executar().catch(addErro) : await abrirLivro.executar().catch(addErro)
         if (resp) {
             setLivro(resp)
-            router.push("/dashboard/livro")
+            router.push("/dashboard/livro/")
             setIsDisabled(false)
         } else setIsDisabled(false)
     }

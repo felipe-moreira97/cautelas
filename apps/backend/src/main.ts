@@ -1,5 +1,6 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, protocol } from "electron";
 import path from "path";
+import express from "express"
 import HandlerLivroArquivo from "./HandlerLivroArquivo";
 
 function createWindow() {
@@ -10,12 +11,20 @@ function createWindow() {
       preload: path.join(__dirname, "preload.js"),
     },
   });
-  const indexHTML = path.join(__dirname, "index.html");
-  // win.loadFile(indexHTML);
   win.loadURL('http://localhost:3000')
-  win.webContents.openDevTools()
 }
+
 const handler = new HandlerLivroArquivo();
+const server =express()
+const url = path.join(__dirname, "dist")
+const port = 3000
+server.use(express.static(url,{
+  extensions:['html','css','js','svg']
+}))
+server.use('/_next', express.static(path.join(__dirname, 'dist','_next')))
+server.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
 
 app.whenReady().then(() => {
   createWindow();

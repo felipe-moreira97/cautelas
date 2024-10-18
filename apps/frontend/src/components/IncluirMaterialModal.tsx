@@ -26,8 +26,8 @@ export default function IncluirMaterialModal() {
   const [numeroDeSerie, setNumeroDeSerie] = useState<string>("");
   const [quantidade, setQuantidade] = useState<number>(1);
 
-  function handleIncluir() {
-    if (!categoria) throw new Error("sem categoria")
+  function handleIncluir(onClose) {
+    !categoria ? addErro(new Error("sem categoria")) :
     categoria.item ?
       novoItem({
         itemProps: {
@@ -38,10 +38,14 @@ export default function IncluirMaterialModal() {
       })
         .then(novoLivro => {
           setLivro(novoLivro)
+          onClose()
+        })
+        .catch(addErro)
+        .finally(() => {
           setCategoria(undefined)
           setNumeroDeSerie("")
           setQuantidade(1)
-        }).catch(addErro) :
+        }) :
       novoMaterial({
         materialProps: {
           nomeCategoria: categoria.nome,
@@ -49,7 +53,10 @@ export default function IncluirMaterialModal() {
         },
         livro
       })
-        .then(novoLivro => setLivro(novoLivro))
+      .then(novoLivro => {
+        setLivro(novoLivro)
+        onClose()
+      })
         .catch(addErro)
         .finally(() => {
           setCategoria(undefined)
@@ -85,10 +92,7 @@ export default function IncluirMaterialModal() {
                 }}>
                   Cancelar
                 </Button>
-                <Button color="primary" onPress={e => {
-                  handleIncluir()
-                  onClose()
-                }}>
+                <Button color="primary" onPress={e => handleIncluir(onClose)}>
                   Incluir
                 </Button>
               </ModalFooter>

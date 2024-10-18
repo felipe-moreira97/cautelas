@@ -15,7 +15,7 @@ export default function CadastrarMilitarModal() {
   const [nome, setNome] = useState<string>("");
   const [cpf, setCpf] = useState<string>("");
 
-  function handleIncluir() {
+  function handleIncluir(onClose) {
     const militarProps = {
       cpf,
       nome
@@ -25,6 +25,7 @@ export default function CadastrarMilitarModal() {
       militarProps,
     }).then(novoLivro => {
       setLivro(novoLivro)
+      onClose()
     }).catch(addErro)
       .finally(() => {
         setNome("")
@@ -52,10 +53,7 @@ export default function CadastrarMilitarModal() {
                 }}>
                   Cancelar
                 </Button>
-                <Button color="primary" onPress={e => {
-                  handleIncluir()
-                  onClose()
-                }}>
+                <Button color="primary" onPress={e => handleIncluir(onClose)}>
                   Incluir
                 </Button>
               </ModalFooter>

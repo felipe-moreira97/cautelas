@@ -18,8 +18,8 @@ export default function ChipsMaterial({
     }
     
     return (
-        !!itens.length && <div className="flex flex-wrap gap-2 px-1 py-2 my-1">
-              {itens.map((item) => <Chip key={item.nome}onClose={() => handleClose(item)}>{item.nome}</Chip>)}
-            </div>
+        <div className="flex flex-wrap gap-2 px-1 py-2 my-1 min-h-[44px]">
+          { !!itens.length && itens.map((item) => <Chip key={item.nome}onClose={() => handleClose(item)}>{item.nome}</Chip>)}
+        </div>
     )
 }

@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardBody, Progress, Button, CircularProgress } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Button, CircularProgress } from "@nextui-org/react";
 import { CloseIcon } from "./icons/CloseIcon";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
@@ -31,7 +31,12 @@ export default function CardErro({ erro, setErros, key }: {
                     isIndeterminate
                     value={value}
                     valueLabel={
-                    <Button isIconOnly onPress={fechaCard} size="sm" radius="full" className="bg-transparent text-deault-800 hover:bg-default-800/[0.15]">
+                    <Button 
+                        isIconOnly 
+                        onPress={fechaCard} 
+                        size="sm" 
+                        radius="full" 
+                        className="bg-transparent text-deault-800 hover:bg-default-800/[0.15]">
                         <CloseIcon height={24} width={24} />
                     </Button>
                     }
@@ -42,7 +47,6 @@ export default function CardErro({ erro, setErros, key }: {
                 <p className="p-0 m-0">
                     {erro.message}
                 </p>
-                {/* <Progress size="sm" disableAnimation radius="sm" classNames={{ indicator: "bg-red-500", base: "h-[2px] bg-default-600" }} value={value} /> */}
             </CardBody>
         </Card>
     )

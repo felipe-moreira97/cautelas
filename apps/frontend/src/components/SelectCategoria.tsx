@@ -10,7 +10,6 @@ export default function SelectCategoria({categorias,value,setValue}:{
   return (
       <Select 
         label="Selecione a categoria"
-        isRequired
         variant="underlined"
         selectedKeys={value && [value.nome]}
         onChange={e => {
