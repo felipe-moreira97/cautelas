@@ -1,5 +1,5 @@
 {
-    "name": "cautelas",
+    "name": "builder",
     "version": "0.1.0",
     "description": "Um livro de cautelas simples",
     "main": "dist/main.js",
@@ -9,6 +9,10 @@
         "email": "felipe_moreira97@hotmail.com"
     },
     "scripts": {
+        "removedir": "rmdir \"\\build",
+        "prepackage:frontend": "xcopy \"..\\frontend\\build\" \"build\" /s /q /y /i",
+        "prepackage:backend": "xcopy \"..\\backend\\dist\" \"dist\" /s /q /y /i",
+        "prepackage": "npm run prepackage:backend && npm run prepackage:frontend",
         "package": "electron-builder --config ./electron-builder.config.json"
     },
     "devDependencies": {

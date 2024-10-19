@@ -35,7 +35,21 @@
         "dist/**"
       ]
     },
-    "frontend#start": {},
+    "backend#start": {
+      "dependsOn": [
+        "^build",
+        "build"
+      ],
+      "cache": false,
+      "persistent": true,
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        "dist/**"
+      ]
+    },
     "backend#dev": {
       "dependsOn": [
         "^build",
@@ -51,15 +65,16 @@
         "dist/**"
       ]
     },
-    "backend#compile": {
-      "dependsOn": [
-        "build"
-      ]
-    },
     "package": {
       "dependsOn": [],
       "outputs": [
         "dist/**"
+      ]
+    },
+    "prepackage": {
+      "dependsOn": [
+        "frontend#build",
+        "backend#build"
       ]
     }
   }

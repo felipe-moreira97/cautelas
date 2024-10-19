@@ -9,7 +9,7 @@
     "email": "felipe_moreira97@hotmail.com"
   },
   "scripts": {
-    "dev": "electron ./dist/main.js",
+    "start": "electron ./dist/main.js",
     "build": "tsc"
   },
   "keywords": [],

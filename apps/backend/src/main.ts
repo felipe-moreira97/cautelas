@@ -5,8 +5,8 @@ import HandlerLivroArquivo from "./HandlerLivroArquivo";
 
 const handler = new HandlerLivroArquivo();
 const server = express()
-const url = path.join(__dirname, "dist")
-const _next = path.join(__dirname, 'dist', '_next')
+const url = path.resolve(__dirname, "..", "build")
+const _next = path.resolve(__dirname, "..", 'build', '_next')
 server.use(express.static(url))
 server.use('/_next', express.static(_next))
 const port = 3000
