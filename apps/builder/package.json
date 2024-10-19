@@ -1,0 +1,21 @@
+{
+    "name": "cautelas",
+    "version": "0.1.0",
+    "description": "Um livro de cautelas simples",
+    "main": "dist/main.js",
+    "homepage": "./",
+    "author": {
+        "name": "Felipe Moreira",
+        "email": "felipe_moreira97@hotmail.com"
+    },
+    "scripts": {
+        "package": "electron-builder --config ./electron-builder.config.json"
+    },
+    "devDependencies": {
+        "electron": "^32.0.2",
+        "electron-builder": "^25.1.8"
+    },
+    "dependencies": {
+        "express": "^4.21.1"
+    }
+}

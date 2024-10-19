@@ -5,6 +5,7 @@
         "external": "tools",
         "model": "json",
         "provider": "config",
+        "builder": "config",
         "usecases": "generator"
     }
 }

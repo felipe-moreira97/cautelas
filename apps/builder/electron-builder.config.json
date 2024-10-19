@@ -1,0 +1,32 @@
+{
+    "appId": "com.cautelas.electron",
+    "productName": "cautelas",
+    "win": {
+        "target": "nsis",
+        "icon": "static/icon.ico"
+    },
+    "linux": {
+        "icon": "static/icon.icns",
+        "target": [
+            "AppImage",
+            "deb"
+        ]
+    },
+    "nsis": {
+        "allowToChangeInstallationDirectory": true,
+        "oneClick": false,
+        "installerIcon": "static/icon.ico",
+        "installerHeaderIcon": "static/icon.ico",
+        "deleteAppDataOnUninstall": true
+    },
+    "mac": {
+        "category": "your.app.category.type"
+    },
+    "files": [
+        "./node_modules/**/*",
+        "./dist/**/*"
+    ],
+    "directories": {
+        "output": "./pkg"
+    }
+}

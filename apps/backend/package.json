@@ -8,26 +8,9 @@
     "name": "Felipe Moreira",
     "email": "felipe_moreira97@hotmail.com"
   },
-  "build": {
-    "appId": "com.cautelas.electron",
-    "productName": "cautelas",
-    "mac": {
-      "category": "your.app.cautelas.type"
-    },
-    "files": [
-      "build/**/*",
-      "../../node_modules/**/*",
-      "dist/**/*"
-    ],
-    "directories": {
-      "buildResources": "../../node_modules/**/*",
-      "output":"build"
-    }
-  },
   "scripts": {
     "dev": "electron ./dist/main.js",
-    "build": "tsc",
-    "dist": "electron-builder build"
+    "build": "tsc"
   },
   "keywords": [],
   "license": "ISC",
@@ -35,7 +18,6 @@
     "@repo/typescript-config": "*",
     "@types/express": "^5.0.0",
     "electron": "^32.0.2",
-    "electron-builder": "^25.1.8",
     "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
