@@ -13,7 +13,8 @@
       "outputs": [
         ".next/**",
         "!.next/cache/**",
-        "dist/**"
+        "dist/**",
+        "build/**"
       ]
     },
     "lint": {
@@ -66,7 +67,9 @@
       ]
     },
     "package": {
-      "dependsOn": [],
+      "dependsOn": [
+        "^prepackage"
+      ],
       "outputs": [
         "dist/**"
       ]
@@ -75,6 +78,10 @@
       "dependsOn": [
         "frontend#build",
         "backend#build"
+      ],
+      "inputs": [
+        "build",
+        "dist"
       ]
     }
   }

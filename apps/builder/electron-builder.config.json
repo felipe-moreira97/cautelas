@@ -24,7 +24,8 @@
     },
     "files": [
         "./node_modules/**/*",
-        "./dist/**/*"
+        "./dist/**/*",
+        "./build/**/*"
     ],
     "directories": {
         "output": "./pkg"
