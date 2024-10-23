@@ -1,0 +1,24 @@
+{
+    "name": "builder",
+    "version": "0.1.0",
+    "description": "Um livro de cautelas simples",
+    "main": "dist/main.js",
+    "homepage": "./",
+    "author": {
+        "name": "Felipe Moreira",
+        "email": "felipe_moreira97@hotmail.com"
+    },
+    "scripts": {
+        "clean": "rmdir /s /q \"build\" && rmdir /s /q \"dist\" && rmdir /s /q \"pkg\"",
+        "prepackage:win": "xcopy \"..\\apps\\frontend\\build\" \"build\" /s /q /y /i && xcopy \"..\\apps\\backend\\dist\" \"dist\" /s /q /y /i",
+        "prepackage:unix": "cp -r \"..\\apps\\frontend\\build\" \"build\" && cp -r \"..\\apps\\backend\\dist\" \"dist\"",
+        "package": "npm i && electron-builder --config ./electron-builder.config.json"
+    },
+    "devDependencies": {
+        "electron": "^32.0.2",
+        "electron-builder": "^25.1.8"
+    },
+    "dependencies": {
+        "express": "^4.21.1"
+    }
+}
